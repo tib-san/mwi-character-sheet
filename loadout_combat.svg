@@ -19,6 +19,7 @@
     .slot { fill: var(--color-slot); stroke: var(--color-slot-stroke); stroke-width: 1.5; }
     .slotNum { font: 0px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-slot-num); }
     .skillLevel { font: 700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-text-dark-mode); text-anchor: end; }
+    .enchant { font: 700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-highlight); text-anchor: start; }
   </style>
 
   <rect x="0" y="0" width="1100" height="720" fill="var(--color-background)"/>
@@ -32,6 +33,18 @@
   <g transform="translate(0,0)">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
+    <text class="title" id="character-name" x="185" y="22" text-anchor="middle">Character Name</text>
+    <g id="character-avatar" transform="translate(25,30)">
+      <!--rect x="0" y="0" width="320" height="180" rx="10" ry="10" fill="var(- -color-slot)" stroke="var(- -color-slot-stroke)" stroke-width="1.5" /-->
+      <g transform="translate(85,15) scale(0.75)">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <use id="avatar-base" href="" width="200" height="200" />
+        </svg>
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <use id="avatar-outfit" href="" width="200" height="200" />
+        </svg>
+      </g>
+    </g>
   </g>
 
   <!-- ===== Equipment (center) ===== -->
@@ -43,27 +56,55 @@
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0"  width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
+      <use id="equip-icon-1" href="" x="15" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-1" x="6" y="12"></text>
       <rect class="slot" x="80"  y="0"  width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
+      <use id="equip-icon-2" href="" x="95" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-2" x="86" y="12"></text>
       <rect class="slot" x="160" y="0"  width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
+      <use id="equip-icon-3" href="" x="175" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-3" x="166" y="12"></text>
       <rect class="slot" x="260" y="0"  width="70" height="70"/><text class="slotNum" x="266" y="14">11</text>
+      <use id="equip-icon-11" href="" x="275" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-11" x="266" y="12"></text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">4</text>
+      <use id="equip-icon-4" href="" x="15" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-4" x="6" y="92"></text>
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">5</text>
+      <use id="equip-icon-5" href="" x="95" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-5" x="86" y="92"></text>
       <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">6</text>
+      <use id="equip-icon-6" href="" x="175" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-6" x="166" y="92"></text>
       <rect class="slot" x="260" y="80" width="70" height="70"/><text class="slotNum" x="266" y="94">12</text>
+      <use id="equip-icon-12" href="" x="275" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-12" x="266" y="92"></text>
 
       <!-- row 3 -->
       <rect class="slot" x="0"   y="160" width="70" height="70"/><text class="slotNum" x="6"  y="174">7</text>
+      <use id="equip-icon-7" href="" x="15" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-7" x="6" y="172"></text>
       <rect class="slot" x="80"  y="160" width="70" height="70"/><text class="slotNum" x="86" y="174">8</text>
+      <use id="equip-icon-8" href="" x="95" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-8" x="86" y="172"></text>
       <rect class="slot" x="160" y="160" width="70" height="70"/><text class="slotNum" x="166" y="174">9</text>
+      <use id="equip-icon-9" href="" x="175" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-9" x="166" y="172"></text>
       <rect class="slot" x="260" y="160" width="70" height="70"/><text class="slotNum" x="266" y="174">13</text>
+      <use id="equip-icon-13" href="" x="275" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-13" x="266" y="172"></text>
 
       <!-- row 4 -->
       <!--rect class="slot" x="0"   y="240" width="70" height="70"/><text class="slotNum" x="6"  y="254">13</text-->
       <rect class="slot" x="80"  y="240" width="70" height="70"/><text class="slotNum" x="86" y="254">10</text>
+      <use id="equip-icon-10" href="" x="95" y="255" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-10" x="86" y="252"></text>
       <!--rect class="slot" x="160" y="240" width="70" height="70"/><text class="slotNum" x="166" y="254">15</text-->
       <rect class="slot" x="260" y="240" width="70" height="70"/><text class="slotNum" x="266" y="254">14</text>
+      <use id="equip-icon-14" href="" x="275" y="255" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-14" x="266" y="252"></text>
     </g>
   </g>
 
@@ -75,13 +116,19 @@
     <g transform="translate(55,20)">
       <!-- row 1 (1-3) -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
+      <use id="food-icon-1" href="" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
+      <use id="food-icon-2" href="" x="95" y="15" width="40" height="40" />
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
+      <use id="food-icon-3" href="" x="175" y="15" width="40" height="40" />
 
       <!-- row 2 (4-6) -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">4</text>
+      <use id="food-icon-4" href="" x="15" y="95" width="40" height="40" />
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">5</text>
+      <use id="food-icon-5" href="" x="95" y="95" width="40" height="40" />
       <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">6</text>
+      <use id="food-icon-6" href="" x="175" y="95" width="40" height="40" />
     </g>
   </g>
 
@@ -93,15 +140,31 @@
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
+      <use id="ability-icon-1" href="" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
+      <use id="ability-icon-2" href="" x="95" y="15" width="40" height="40" />
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
+      <use id="ability-icon-3" href="" x="175" y="15" width="40" height="40" />
       <rect class="slot" x="240" y="0" width="70" height="70"/><text class="slotNum" x="246" y="14">4</text>
+      <use id="ability-icon-4" href="" x="255" y="15" width="40" height="40" />
+      <text class="skillLevel" id="ability-level-1" x="65" y="14"></text>
+      <text class="skillLevel" id="ability-level-2" x="145" y="14"></text>
+      <text class="skillLevel" id="ability-level-3" x="225" y="14"></text>
+      <text class="skillLevel" id="ability-level-4" x="305" y="14"></text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">5</text>
+      <use id="ability-icon-5" href="" x="15" y="95" width="40" height="40" />
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">6</text>
+      <use id="ability-icon-6" href="" x="95" y="95" width="40" height="40" />
       <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">7</text>
+      <use id="ability-icon-7" href="" x="175" y="95" width="40" height="40" />
       <rect class="slot" x="240" y="80" width="70" height="70"/><text class="slotNum" x="246" y="94">8</text>
+      <use id="ability-icon-8" href="" x="255" y="95" width="40" height="40" />
+      <text class="skillLevel" id="ability-level-5" x="65" y="94"></text>
+      <text class="skillLevel" id="ability-level-6" x="145" y="94"></text>
+      <text class="skillLevel" id="ability-level-7" x="225" y="94"></text>
+      <text class="skillLevel" id="ability-level-8" x="305" y="94"></text>
     </g>
   </g>
 
@@ -149,12 +212,26 @@
     <!-- 7 stacked slots -->
     <g transform="translate(20,20)">
       <rect class="slot" x="0" y="0"   width="70" height="70"/><text class="slotNum" x="6" y="14">1</text>
+      <use id="housing-icon-1" href="skills_sprite.svg#stamina" x="15" y="15" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-1" x="65" y="14">—</text>
       <rect class="slot" x="0" y="80"  width="70" height="70"/><text class="slotNum" x="6" y="94">2</text>
+      <use id="housing-icon-2" href="skills_sprite.svg#intelligence" x="15" y="95" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-2" x="65" y="94">—</text>
       <rect class="slot" x="0" y="160" width="70" height="70"/><text class="slotNum" x="6" y="174">3</text>
+      <use id="housing-icon-3" href="skills_sprite.svg#attack" x="15" y="175" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-3" x="65" y="174">—</text>
       <rect class="slot" x="0" y="240" width="70" height="70"/><text class="slotNum" x="6" y="254">4</text>
+      <use id="housing-icon-4" href="skills_sprite.svg#defense" x="15" y="255" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-4" x="65" y="254">—</text>
       <rect class="slot" x="0" y="320" width="70" height="70"/><text class="slotNum" x="6" y="334">5</text>
+      <use id="housing-icon-5" href="skills_sprite.svg#melee" x="15" y="335" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-5" x="65" y="334">—</text>
       <rect class="slot" x="0" y="400" width="70" height="70"/><text class="slotNum" x="6" y="414">6</text>
+      <use id="housing-icon-6" href="skills_sprite.svg#ranged" x="15" y="415" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-6" x="65" y="414">—</text>
       <rect class="slot" x="0" y="480" width="70" height="70"/><text class="slotNum" x="6" y="494">7</text>
+      <use id="housing-icon-7" href="skills_sprite.svg#magic" x="15" y="495" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-7" x="65" y="494">—</text>
     </g>
   </g>
 </g>
@@ -177,8 +254,39 @@
   const setLevel = (id, value) => {
     const el = document.getElementById(id);
     if (!el) return;
+    if (value === null || value === undefined || value === '') {
+      el.textContent = '—';
+      return;
+    }
     const n = Number.isFinite(value) ? value : num(value);
     el.textContent = Number.isFinite(n) ? Math.round(n) : '—';
+  };
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (!el || value === undefined || value === null) return;
+    el.textContent = value;
+  };
+
+  const setHref = (id, href) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (href) {
+      el.setAttribute('href', href);
+    } else {
+      el.removeAttribute('href');
+    }
+  };
+
+  const setEnchant = (id, value) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const n = num(value);
+    if (n > 0) {
+      el.textContent = `+${Math.round(n)}`;
+    } else {
+      el.textContent = '';
+    }
   };
 
   // Expected array order in urp: [stamina, intelligence, attack, defense, melee, ranged, magic]
@@ -204,6 +312,53 @@
   const maxAttackDefenseMeleeRangedMagic = Math.max(attack, defense, melee, ranged, magic);
   const slot1 = 0.1 * (stamina + intelligence + attack + defense + maxMeleeRangedMagic) + 0.5 * maxAttackDefenseMeleeRangedMagic;
   setLevel('skill-level-1', slot1);
+
+  // Abilities: [{ id, level }]
+  const abilities = Array.isArray(data.abilities) ? data.abilities : [];
+  abilities.forEach((ability, idx) => {
+    if (idx > 7) return;
+    const iconId = ability && ability.id ? `abilities_sprite.svg#${ability.id}` : '';
+    setHref(`ability-icon-${idx + 1}`, iconId);
+    setLevel(`ability-level-${idx + 1}`, ability ? ability.level : undefined);
+  });
+
+  // Food items: item ids from items_sprite.svg
+  const food = Array.isArray(data.food) ? data.food : [];
+  food.forEach((itemId, idx) => {
+    if (idx > 5) return;
+    const iconId = itemId ? `items_sprite.svg#${itemId}` : '';
+    setHref(`food-icon-${idx + 1}`, iconId);
+  });
+
+  // Housing levels (order matches skills array)
+  const housing = Array.isArray(data.housing) ? data.housing : [];
+  housing.forEach((level, idx) => {
+    if (idx > 6) return;
+    setLevel(`housing-level-${idx + 1}`, level);
+  });
+
+  // Equipment items: use slot label order (1,2,3,11,4,5,6,12,7,8,9,13,10,14)
+  const equipment = Array.isArray(data.equipment) ? data.equipment : [];
+  const equipSlots = [1, 2, 3, 11, 4, 5, 6, 12, 7, 8, 9, 13, 10, 14];
+  equipment.forEach((entry, idx) => {
+    const iconId = entry && typeof entry === 'object' ? (entry.id ? `items_sprite.svg#${entry.id}` : '') : (entry ? `items_sprite.svg#${entry}` : '');
+    setHref(`equip-icon-${idx+1}`, iconId);
+    const enchantValue = entry && typeof entry === 'object' ? (entry.enchant ?? entry.level ?? entry.enhance) : undefined;
+    setEnchant(`equip-enchant-${idx+1}`, enchantValue);
+  });
+
+  // Character name
+  setText('character-name', data.name || data.characterName);
+
+  // Avatar (base + outfit) with defaults
+  setHref('avatar-base', 'avatars_sprite.svg#person_default');
+  setHref('avatar-outfit', 'avatar_outfits_sprite.svg#tshirt_default');
+  if (data.avatar && data.avatar.base) {
+    setHref('avatar-base', `avatars_sprite.svg#${data.avatar.base}`);
+  }
+  if (data.avatar && data.avatar.outfit) {
+    setHref('avatar-outfit', `avatar_outfits_sprite.svg#${data.avatar.outfit}`);
+  }
 })();
 ]]></script>
 </svg>
