@@ -115,7 +115,7 @@
   <!-- ===== Equipment (center) ===== -->
   <g transform="translate(0,240)">
     <rect class="panel" x="0" y="0" width="370" height="350" />
-    <text class="title" x="3" y="16">Equipment</text>
+    <text class="title" x="3" y="14">Equipment</text>
 
     <!-- 4x4 grid -->
     <g transform="translate(20,20)">
