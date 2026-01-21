@@ -6,9 +6,22 @@
   <style>
     body { margin: 0; background: #0b1020; color: #e7e7e7; font-family: system-ui, sans-serif; }
     #target { width: 870px; height: 610px; display: block; margin: 20px auto; }
+    #copy-btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 16px;
+      background: #24304f;
+      color: #e7e7e7;
+      border: 1px solid #3a4a70;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #copy-btn:disabled { opacity: 0.6; cursor: progress; }
   </style>
 </head>
 <body>
+  <button id="copy-btn" type="button">Copy image</button>
   <div id="target">Loading…</div>
   <script type="module">
     const svgUrl = './loadout_combat.svg';
@@ -82,6 +95,87 @@
       return out;
     };
 
+    const getSvgDimensions = (svgEl) => {
+      const viewBox = svgEl.getAttribute('viewBox');
+      if (viewBox) {
+        const parts = viewBox.split(/[\s,]+/).map((p) => parseFloat(p));
+        if (parts.length === 4 && !parts.some(Number.isNaN)) return { width: parts[2], height: parts[3] };
+      }
+
+      const widthAttr = parseFloat(svgEl.getAttribute('width'));
+      const heightAttr = parseFloat(svgEl.getAttribute('height'));
+      if (!Number.isNaN(widthAttr) && !Number.isNaN(heightAttr) && widthAttr && heightAttr) {
+        return { width: widthAttr, height: heightAttr };
+      }
+
+      const rect = svgEl.getBoundingClientRect();
+      if (rect.width && rect.height) return { width: rect.width, height: rect.height };
+
+      return { width: 870, height: 610 }; // sensible fallback matching layout
+    };
+
+    const svgToPngBlob = async (svgEl) => new Promise((resolve, reject) => {
+      const clone = svgEl.cloneNode(true);
+      if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      const serialized = new XMLSerializer().serializeToString(clone);
+      const svgBlob = new Blob([serialized], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      const { width, height } = getSvgDimensions(svgEl);
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: false });
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          URL.revokeObjectURL(url);
+          if (blob) resolve(blob);
+          else reject(new Error('Canvas export failed'));
+        }, 'image/png');
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('SVG could not be loaded for export'));
+      };
+
+      img.src = url;
+    });
+
+    const copyImage = async () => {
+      const btn = document.getElementById('copy-btn');
+      const svgEl = document.querySelector('#target svg');
+      if (!navigator.clipboard || !window.ClipboardItem) {
+        btn.textContent = 'Clipboard not supported';
+        setTimeout(() => { btn.textContent = 'Copy image'; }, 2000);
+        return;
+      }
+      if (!svgEl) {
+        btn.textContent = 'SVG not ready';
+        setTimeout(() => { btn.textContent = 'Copy image'; }, 1500);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Copying…';
+      try {
+        const blob = await svgToPngBlob(svgEl);
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        btn.textContent = 'Copied!';
+      } catch (err) {
+        console.error(err);
+        btn.textContent = 'Copy failed';
+      } finally {
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = 'Copy image';
+        }, 1200);
+      }
+    };
+
     const main = async () => {
       try {
         const urlParams = new URLSearchParams(location.search);
@@ -98,6 +192,7 @@
       }
     };
 
+    document.getElementById('copy-btn').addEventListener('click', copyImage);
     main();
   </script>
 </body>
