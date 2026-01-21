@@ -117,32 +117,34 @@
     const svgToPngBlob = async (svgEl) => new Promise((resolve, reject) => {
       const clone = svgEl.cloneNode(true);
       if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      const serialized = new XMLSerializer().serializeToString(clone);
-      const svgBlob = new Blob([serialized], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(svgBlob);
-      const img = new Image();
-      const { width, height } = getSvgDimensions(svgEl);
+      inlineExternalAssets(clone).then(() => {
+        const serialized = new XMLSerializer().serializeToString(clone);
+        const svgBlob = new Blob([serialized], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        const { width, height } = getSvgDimensions(svgEl);
 
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d', { willReadFrequently: false });
-        ctx.clearRect(0, 0, width, height);
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob((blob) => {
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d', { willReadFrequently: false });
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(url);
+            if (blob) resolve(blob);
+            else reject(new Error('Canvas export failed'));
+          }, 'image/png');
+        };
+
+        img.onerror = () => {
           URL.revokeObjectURL(url);
-          if (blob) resolve(blob);
-          else reject(new Error('Canvas export failed'));
-        }, 'image/png');
-      };
+          reject(new Error('SVG could not be loaded for export'));
+        };
 
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('SVG could not be loaded for export'));
-      };
-
-      img.src = url;
+        img.src = url;
+      }).catch(reject);
     });
 
     const copyImage = async () => {
@@ -194,6 +196,79 @@
 
     document.getElementById('copy-btn').addEventListener('click', copyImage);
     main();
+
+    async function inlineExternalAssets(svgEl) {
+      await Promise.all([
+        inlineExternalUses(svgEl),
+        inlineExternalImages(svgEl),
+      ]);
+    }
+
+    async function inlineExternalUses(svgEl) {
+      const uses = Array.from(svgEl.querySelectorAll('use'));
+      if (!uses.length) return;
+
+      const refs = [];
+      uses.forEach((el) => {
+        const href = el.getAttribute('href') || el.getAttribute('xlink:href');
+        if (!href || href.startsWith('#')) return;
+        const [file, symbolId] = href.split('#');
+        if (!file || !symbolId) return;
+        refs.push({ file, symbolId });
+      });
+      if (!refs.length) return;
+
+      const defs = svgEl.querySelector('defs') || svgEl.insertBefore(document.createElementNS('http://www.w3.org/2000/svg', 'defs'), svgEl.firstChild);
+      const fileCache = new Map();
+
+      for (const { file, symbolId } of refs) {
+        if (!fileCache.has(file)) {
+          const res = await fetch(file);
+          if (!res.ok) continue;
+          const text = await res.text();
+          fileCache.set(file, text);
+        }
+        const svgText = fileCache.get(file);
+        const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+        const symbol = doc.getElementById(symbolId);
+        if (symbol && !defs.querySelector(`[id="${symbolId}"]`)) {
+          defs.appendChild(symbol.cloneNode(true));
+        }
+        uses.forEach((el) => {
+          const href = el.getAttribute('href') || el.getAttribute('xlink:href');
+          if (href && href.startsWith(`${file}#${symbolId}`)) {
+            el.setAttribute('href', `#${symbolId}`);
+            el.removeAttribute('xlink:href');
+          }
+        });
+      }
+    }
+
+    async function inlineExternalImages(svgEl) {
+      const images = Array.from(svgEl.querySelectorAll('image'));
+      if (!images.length) return;
+      const cache = new Map();
+
+      const toDataUrl = (blob) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      for (const img of images) {
+        const href = img.getAttribute('href') || img.getAttribute('xlink:href');
+        if (!href || href.startsWith('#') || href.startsWith('data:')) continue;
+        if (!cache.has(href)) {
+          const res = await fetch(href);
+          if (!res.ok) continue;
+          const blob = await res.blob();
+          cache.set(href, await toDataUrl(blob));
+        }
+        img.setAttribute('href', cache.get(href));
+        img.removeAttribute('xlink:href');
+      }
+    }
   </script>
 </body>
 </html>
