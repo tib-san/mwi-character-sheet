@@ -239,6 +239,7 @@
 (function() {
   const params = new URLSearchParams(location.search);
   const raw = params.get('urp');
+  const rawTight = params.get('urpt');
   let data = {};
   try {
     data = raw ? JSON.parse(decodeURIComponent(raw)) : {};
@@ -290,6 +291,48 @@
   };
 
   // Expected array order in urp: [stamina, intelligence, attack, defense, melee, ranged, magic]
+  const parseTight = (str) => {
+    if (!str) return {};
+    const parts = str.split(';');
+    const get = (idx) => (idx < parts.length ? parts[idx] : '');
+    const splitList = (section) => section ? section.split(',') : [];
+
+    const skills = splitList(get(0)).map(num);
+
+    const abilities = splitList(get(1)).map((entry) => {
+      if (!entry) return null;
+      const [id, lvl] = entry.split('.');
+      if (!id) return null;
+      return { id, level: lvl !== undefined ? num(lvl.replace('+', '')) : undefined };
+    });
+
+    const food = splitList(get(2));
+
+    const housing = splitList(get(3)).map(num);
+
+    const equipment = splitList(get(4)).map((entry) => {
+      if (!entry) return null;
+      const [id, ench] = entry.split('.');
+      if (!id) return null;
+      return ench !== undefined ? { id, enchant: num(ench.replace('+', '')) } : { id };
+    });
+
+    const avatarParts = splitList(get(5));
+    const avatar = {
+      base: avatarParts[0] || 'person_default',
+      outfit: avatarParts[1] || 'shirt_default'
+    };
+
+    const name = decodeURIComponent(get(6) || '');
+
+    return { skills, abilities, food, housing, equipment, avatar, name };
+  };
+
+  const tightData = rawTight ? parseTight(rawTight) : null;
+  if (tightData) {
+    data = tightData;
+  }
+
   const payload = Array.isArray(data) ? data : Array.isArray(data.skills) ? data.skills : [];
   const stamina = num(payload[0]);
   const intelligence = num(payload[1]);
@@ -339,7 +382,6 @@
 
   // Equipment items: use slot label order (1,2,3,11,4,5,6,12,7,8,9,13,10,14)
   const equipment = Array.isArray(data.equipment) ? data.equipment : [];
-  const equipSlots = [1, 2, 3, 11, 4, 5, 6, 12, 7, 8, 9, 13, 10, 14];
   equipment.forEach((entry, idx) => {
     const iconId = entry && typeof entry === 'object' ? (entry.id ? `items_sprite.svg#${entry.id}` : '') : (entry ? `items_sprite.svg#${entry}` : '');
     setHref(`equip-icon-${idx+1}`, iconId);
