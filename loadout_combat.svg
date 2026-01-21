@@ -120,54 +120,52 @@
     <!-- 4x4 grid -->
     <g transform="translate(20,20)">
       <!-- row 1 -->
-      <rect class="slot" x="0"   y="0"  width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
+      <rect class="slot" x="0"   y="0"  width="70" height="70"/>
       <use id="equip-icon-1" href="{{equipment-1-item}}" x="15" y="15" width="40" height="40" />
       <text class="enchant" id="equip-enchant-1" x="6" y="12">{{equipment-1-enchantment}}</text>
-      <rect class="slot" x="80"  y="0"  width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
+      <rect class="slot" x="80"  y="0"  width="70" height="70"/>
       <use id="equip-icon-2" href="{{equipment-2-item}}" x="95" y="15" width="40" height="40" />
       <text class="enchant" id="equip-enchant-2" x="86" y="12">{{equipment-2-enchantment}}</text>
-      <rect class="slot" x="160" y="0"  width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
+      <rect class="slot" x="160" y="0"  width="70" height="70"/>
       <use id="equip-icon-3" href="{{equipment-3-item}}" x="175" y="15" width="40" height="40" />
       <text class="enchant" id="equip-enchant-3" x="166" y="12">{{equipment-3-enchantment}}</text>
-      <rect class="slot" x="260" y="0"  width="70" height="70"/><text class="slotNum" x="266" y="14">4</text>
-      <use id="equip-icon-4" href="{{equipment-4-item}}" x="275" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-4" x="266" y="12">{{equipment-4-enchantment}}</text>
+      <rect class="slot" x="260" y="0"  width="70" height="70"/>
+      <use id="equip-icon-11" href="{{equipment-11-item}}" x="275" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-11" x="266" y="12">{{equipment-11-enchantment}}</text>
 
       <!-- row 2 -->
-      <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">5</text>
-      <use id="equip-icon-5" href="{{equipment-5-item}}" x="15" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-5" x="6" y="92">{{equipment-5-enchantment}}</text>
-      <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">6</text>
-      <use id="equip-icon-6" href="{{equipment-6-item}}" x="95" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-6" x="86" y="92">{{equipment-6-enchantment}}</text>
-      <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">7</text>
-      <use id="equip-icon-7" href="{{equipment-7-item}}" x="175" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-7" x="166" y="92">{{equipment-7-enchantment}}</text>
-      <rect class="slot" x="260" y="80" width="70" height="70"/><text class="slotNum" x="266" y="94">8</text>
-      <use id="equip-icon-8" href="{{equipment-8-item}}" x="275" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-8" x="266" y="92">{{equipment-8-enchantment}}</text>
+      <rect class="slot" x="0"   y="80" width="70" height="70"/>
+      <use id="equip-icon-4" href="{{equipment-4-item}}" x="15" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-4" x="6" y="92">{{equipment-4-enchantment}}</text>
+      <rect class="slot" x="80"  y="80" width="70" height="70"/>
+      <use id="equip-icon-5" href="{{equipment-5-item}}" x="95" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-5" x="86" y="92">{{equipment-5-enchantment}}</text>
+      <rect class="slot" x="160" y="80" width="70" height="70"/>
+      <use id="equip-icon-6" href="{{equipment-6-item}}" x="175" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-6" x="166" y="92">{{equipment-6-enchantment}}</text>
+      <rect class="slot" x="260" y="80" width="70" height="70"/>
+      <use id="equip-icon-12" href="{{equipment-12-item}}" x="275" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-12" x="266" y="92">{{equipment-12-enchantment}}</text>
 
       <!-- row 3 -->
-      <rect class="slot" x="0"   y="160" width="70" height="70"/><text class="slotNum" x="6"  y="174">9</text>
-      <use id="equip-icon-9" href="{{equipment-9-item}}" x="15" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-9" x="6" y="172">{{equipment-9-enchantment}}</text>
-      <rect class="slot" x="80"  y="160" width="70" height="70"/><text class="slotNum" x="86" y="174">10</text>
-      <use id="equip-icon-10" href="{{equipment-10-item}}" x="95" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-10" x="86" y="172">{{equipment-10-enchantment}}</text>
-      <rect class="slot" x="160" y="160" width="70" height="70"/><text class="slotNum" x="166" y="174">11</text>
-      <use id="equip-icon-11" href="{{equipment-11-item}}" x="175" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-11" x="166" y="172">{{equipment-11-enchantment}}</text>
-      <rect class="slot" x="260" y="160" width="70" height="70"/><text class="slotNum" x="266" y="174">12</text>
-      <use id="equip-icon-12" href="{{equipment-12-item}}" x="275" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-12" x="266" y="172">{{equipment-12-enchantment}}</text>
+      <rect class="slot" x="0"   y="160" width="70" height="70"/>
+      <use id="equip-icon-7" href="{{equipment-7-item}}" x="15" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-7" x="6" y="172">{{equipment-7-enchantment}}</text>
+      <rect class="slot" x="80"  y="160" width="70" height="70"/>
+      <use id="equip-icon-8" href="{{equipment-8-item}}" x="95" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-8" x="86" y="172">{{equipment-8-enchantment}}</text>
+      <rect class="slot" x="160" y="160" width="70" height="70"/>
+      <use id="equip-icon-9" href="{{equipment-9-item}}" x="175" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-9" x="166" y="172">{{equipment-9-enchantment}}</text>
+      <rect class="slot" x="260" y="160" width="70" height="70"/>
+      <use id="equip-icon-13" href="{{equipment-13-item}}" x="275" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-13" x="266" y="172">{{equipment-13-enchantment}}</text>
 
       <!-- row 4 -->
-      <!--rect class="slot" x="0"   y="240" width="70" height="70"/><text class="slotNum" x="6"  y="254">13</text-->
-      <rect class="slot" x="80"  y="240" width="70" height="70"/><text class="slotNum" x="86" y="254">13</text>
-      <use id="equip-icon-13" href="{{equipment-13-item}}" x="95" y="255" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-13" x="86" y="252">{{equipment-13-enchantment}}</text>
-      <!--rect class="slot" x="160" y="240" width="70" height="70"/><text class="slotNum" x="166" y="254">15</text-->
-      <rect class="slot" x="260" y="240" width="70" height="70"/><text class="slotNum" x="266" y="254">14</text>
+      <rect class="slot" x="80"  y="240" width="70" height="70"/>
+      <use id="equip-icon-10" href="{{equipment-10-item}}" x="95" y="255" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-10" x="86" y="252">{{equipment-10-enchantment}}</text>
+      <rect class="slot" x="260" y="240" width="70" height="70"/>
       <use id="equip-icon-14" href="{{equipment-14-item}}" x="275" y="255" width="40" height="40" />
       <text class="enchant" id="equip-enchant-14" x="266" y="252">{{equipment-14-enchantment}}</text>
     </g>
