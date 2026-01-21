@@ -25,6 +25,8 @@
   <div id="target">Loading…</div>
   <script type="module">
     const svgUrl = './loadout_combat.svg';
+    const symbolFileCache = new Map();
+    const imageDataCache = new Map();
 
     const fetchSvg = async () => {
       const res = await fetch(svgUrl);
@@ -189,6 +191,8 @@
         const replacements = flatten(parsed, renderMap ? renderMap.split : null, renderMap ? renderMap.joinBy || '-' : '-', '');
         const templated = applyReplacements(svgText, replacements);
         document.getElementById('target').innerHTML = templated;
+        const svgEl = document.querySelector('#target svg');
+        if (svgEl) await inlineExternalAssets(svgEl); // prime caches so copying is instant
       } catch (err) {
         document.getElementById('target').textContent = 'Render error: ' + err.message;
         console.error(err);
@@ -215,40 +219,45 @@
         if (!href || href.startsWith('#')) return;
         const [file, symbolId] = href.split('#');
         if (!file || !symbolId) return;
-        refs.push({ file, symbolId });
+        refs.push({ file, symbolId, el });
       });
       if (!refs.length) return;
 
       const defs = svgEl.querySelector('defs') || svgEl.insertBefore(document.createElementNS('http://www.w3.org/2000/svg', 'defs'), svgEl.firstChild);
-      const fileCache = new Map();
+      const files = [...new Set(refs.map((r) => r.file))];
 
-      for (const { file, symbolId } of refs) {
-        if (!fileCache.has(file)) {
-          const res = await fetch(file);
-          if (!res.ok) continue;
-          const text = await res.text();
-          fileCache.set(file, text);
-        }
-        const svgText = fileCache.get(file);
-        const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+      // Fetch symbol files in parallel with caching
+      await Promise.all(files.map(async (file) => {
+        if (symbolFileCache.has(file)) return;
+        const res = await fetch(file);
+        if (!res.ok) return;
+        symbolFileCache.set(file, await res.text());
+      }));
+
+      const parsedByFile = new Map();
+      files.forEach((file) => {
+        const text = symbolFileCache.get(file);
+        if (text) parsedByFile.set(file, new DOMParser().parseFromString(text, 'image/svg+xml'));
+      });
+
+      refs.forEach(({ file, symbolId, el }) => {
+        const doc = parsedByFile.get(file);
+        if (!doc) return;
         const symbol = doc.getElementById(symbolId);
         if (symbol && !defs.querySelector(`[id="${symbolId}"]`)) {
           defs.appendChild(symbol.cloneNode(true));
         }
-        uses.forEach((el) => {
-          const href = el.getAttribute('href') || el.getAttribute('xlink:href');
-          if (href && href.startsWith(`${file}#${symbolId}`)) {
-            el.setAttribute('href', `#${symbolId}`);
-            el.removeAttribute('xlink:href');
-          }
-        });
-      }
+        const href = el.getAttribute('href') || el.getAttribute('xlink:href');
+        if (href && href.startsWith(`${file}#${symbolId}`)) {
+          el.setAttribute('href', `#${symbolId}`);
+          el.removeAttribute('xlink:href');
+        }
+      });
     }
 
     async function inlineExternalImages(svgEl) {
       const images = Array.from(svgEl.querySelectorAll('image'));
       if (!images.length) return;
-      const cache = new Map();
 
       const toDataUrl = (blob) => new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -257,18 +266,25 @@
         reader.readAsDataURL(blob);
       });
 
-      for (const img of images) {
+      const hrefs = [...new Set(images.map((img) => img.getAttribute('href') || img.getAttribute('xlink:href')).filter((h) => h && !h.startsWith('#') && !h.startsWith('data:')))];
+
+      await Promise.all(hrefs.map(async (href) => {
+        if (imageDataCache.has(href)) return;
+        const res = await fetch(href);
+        if (!res.ok) return;
+        const blob = await res.blob();
+        imageDataCache.set(href, await toDataUrl(blob));
+      }));
+
+      images.forEach((img) => {
         const href = img.getAttribute('href') || img.getAttribute('xlink:href');
-        if (!href || href.startsWith('#') || href.startsWith('data:')) continue;
-        if (!cache.has(href)) {
-          const res = await fetch(href);
-          if (!res.ok) continue;
-          const blob = await res.blob();
-          cache.set(href, await toDataUrl(blob));
+        if (!href || href.startsWith('#') || href.startsWith('data:')) return;
+        const dataUrl = imageDataCache.get(href);
+        if (dataUrl) {
+          img.setAttribute('href', dataUrl);
+          img.removeAttribute('xlink:href');
         }
-        img.setAttribute('href', cache.get(href));
-        img.removeAttribute('xlink:href');
-      }
+      });
     }
   </script>
 </body>
