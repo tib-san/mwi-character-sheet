@@ -111,15 +111,23 @@
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
+      <use href="skills_sprite.svg#milking" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
+      <use href="skills_sprite.svg#melee" x="95" y="15" width="40" height="40" />
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
+      <use href="skills_sprite.svg#ranged" x="175" y="15" width="40" height="40" />
       <rect class="slot" x="240" y="0" width="70" height="70"/><text class="slotNum" x="246" y="14">4</text>
+      <use href="skills_sprite.svg#magic" x="255" y="15" width="40" height="40" />
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">5</text>
+      <use href="skills_sprite.svg#stamina" x="15" y="95" width="40" height="40" />
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">6</text>
+      <use href="skills_sprite.svg#intelligence" x="95" y="95" width="40" height="40" />
       <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">7</text>
+      <use href="skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
       <rect class="slot" x="240" y="80" width="70" height="70"/><text class="slotNum" x="246" y="94">8</text>
+      <use href="skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
     </g>
   </g>
 
