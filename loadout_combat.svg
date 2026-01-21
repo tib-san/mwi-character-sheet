@@ -7,7 +7,8 @@
     .slotNum { font: 10px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #666; }
   </style>
 
-  <rect x="0" y="0" width="870" height="610" fill="#f0f0f0"/>
+  <rect x="0" y="0" width="1100" height="720" fill="#131c37"/>
+  <image href="background.svg" x="0" y="0" width="1100" height="720" preserveAspectRatio="xMidYMid slice" opacity="0.65" />
 
   <!-- Layout constants (by convention):
        slot = 70, gap = 10, padding = 18
