@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MWI Character Sheet Render</title>
+  <style>
+    body { margin: 0; background: #0b1020; color: #e7e7e7; font-family: system-ui, sans-serif; }
+    #target { width: 870px; height: 610px; display: block; margin: 20px auto; }
+  </style>
+</head>
+<body>
+  <div id="target">Loading…</div>
+  <script type="module">
+    const svgUrl = './loadout_combat.svg';
+
+    const fetchSvg = async () => {
+      const res = await fetch(svgUrl);
+      if (!res.ok) throw new Error('Failed to fetch SVG');
+      return res.text();
+    };
+
+    const readRenderMap = (svgText) => {
+      const match = svgText.match(/render-map:\s*([\s\S]*?)-->/);
+      if (!match) return null;
+      try { return JSON.parse(match[1]); } catch (e) { return null; }
+    };
+
+    const splitWithKeys = (str, delimiter, keys) => {
+      if (!keys || !Array.isArray(keys)) return {};
+      const parts = delimiter !== null && delimiter !== undefined ? (str ? str.split(delimiter) : []) : [str];
+      const out = {};
+      keys.forEach((k, idx) => { out[k] = parts[idx] !== undefined ? parts[idx] : ''; });
+      return out;
+    };
+
+    const parseByMap = (str, mapNode) => {
+      if (!mapNode || !mapNode.keys) return str;
+      const base = splitWithKeys(str, mapNode.delimiter, mapNode.keys);
+      const result = {};
+      mapNode.keys.forEach((k) => {
+        const childMap = mapNode[k];
+        const val = base[k] === undefined ? '' : base[k];
+        result[k] = childMap ? parseByMap(val, childMap) : val;
+      });
+      return result;
+    };
+
+    const flatten = (obj, mapNode, joinBy, prefixKey = '', inherited = {}, out = {}) => {
+      if (obj === null || obj === undefined) return out;
+      if (!mapNode) return out;
+      const currentPrefix = mapNode.prefix !== undefined ? mapNode.prefix : inherited.prefix;
+      const currentDefault = mapNode.default !== undefined ? mapNode.default : inherited.default;
+
+      if (!mapNode.keys || typeof obj !== 'object') {
+        const val = (obj === '' || obj === undefined || obj === null) ? (currentDefault !== undefined ? currentDefault : '') : obj;
+        const finalVal = currentPrefix && val ? `${currentPrefix}${val}` : val;
+        if (prefixKey) out[prefixKey] = finalVal;
+        return out;
+      }
+
+      mapNode.keys.forEach((k) => {
+        const nextKey = prefixKey ? `${prefixKey}${joinBy}${k}` : k;
+        const childMap = mapNode[k] || {};
+        const childVal = obj[k] !== undefined ? obj[k] : '';
+        if (typeof childVal === 'object' && childVal !== null && childMap.keys) {
+          flatten(childVal, childMap, joinBy, nextKey, { prefix: childMap.prefix ?? currentPrefix, default: childMap.default ?? currentDefault }, out);
+        } else {
+          const val = (childVal === '' || childVal === undefined || childVal === null) ? (childMap.default !== undefined ? childMap.default : currentDefault !== undefined ? currentDefault : '') : childVal;
+          const finalVal = (childMap.prefix !== undefined ? childMap.prefix : currentPrefix) && val ? `${childMap.prefix !== undefined ? childMap.prefix : currentPrefix}${val}` : val;
+          out[nextKey] = finalVal;
+        }
+      });
+      return out;
+    };
+
+    const applyReplacements = (svgText, replacements) => {
+      let out = svgText;
+      Object.entries(replacements).forEach(([key, val]) => {
+        const re = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+        out = out.replace(re, val === undefined || val === null ? '' : String(val));
+      });
+      return out;
+    };
+
+    const main = async () => {
+      try {
+        const urlParams = new URLSearchParams(location.search);
+        const urpt = urlParams.get('urpt') || '';
+        const svgText = await fetchSvg();
+        const renderMap = readRenderMap(svgText);
+        const parsed = (urpt && renderMap && renderMap.split) ? (parseByMap(urpt, renderMap.split) || {}) : {};
+        const replacements = flatten(parsed, renderMap ? renderMap.split : null, renderMap ? renderMap.joinBy || '-' : '-', '');
+        const templated = applyReplacements(svgText, replacements);
+        document.getElementById('target').innerHTML = templated;
+      } catch (err) {
+        document.getElementById('target').textContent = 'Render error: ' + err.message;
+        console.error(err);
+      }
+    };
+
+    main();
+  </script>
+</body>
+</html>
