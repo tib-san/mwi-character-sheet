@@ -10,6 +10,7 @@
       --color-slot-stroke: #546ddb;
       --color-slot-num: #a272e4;
       --color-highlight: #dd7b5c;
+      --color-text-dark-mode: #e7e7e7;
     }
 
     .panel { fill: var(--color-panel); fill-opacity: 0.5; stroke: var(--color-panel-stroke); stroke-width: 2; }
@@ -17,6 +18,7 @@
     .subtitle { font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-subtle); }
     .slot { fill: var(--color-slot); stroke: var(--color-slot-stroke); stroke-width: 1.5; }
     .slotNum { font: 0px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-slot-num); }
+    .skillLevel { font: 700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-text-dark-mode); text-anchor: end; }
   </style>
 
   <rect x="0" y="0" width="1100" height="720" fill="var(--color-background)"/>
@@ -118,6 +120,10 @@
       <use href="skills_sprite.svg#ranged" x="175" y="15" width="40" height="40" />
       <rect class="slot" x="240" y="0" width="70" height="70"/><text class="slotNum" x="246" y="14">4</text>
       <use href="skills_sprite.svg#magic" x="255" y="15" width="40" height="40" />
+      <text class="skillLevel" id="skill-level-1" x="65" y="14">—</text>
+      <text class="skillLevel" id="skill-level-2" x="145" y="14">—</text>
+      <text class="skillLevel" id="skill-level-3" x="225" y="14">—</text>
+      <text class="skillLevel" id="skill-level-4" x="305" y="14">—</text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">5</text>
@@ -128,6 +134,10 @@
       <use href="skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
       <rect class="slot" x="240" y="80" width="70" height="70"/><text class="slotNum" x="246" y="94">8</text>
       <use href="skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
+      <text class="skillLevel" id="skill-level-5" x="65" y="94">—</text>
+      <text class="skillLevel" id="skill-level-6" x="145" y="94">—</text>
+      <text class="skillLevel" id="skill-level-7" x="225" y="94">—</text>
+      <text class="skillLevel" id="skill-level-8" x="305" y="94">—</text>
     </g>
   </g>
 
@@ -148,4 +158,52 @@
     </g>
   </g>
 </g>
+<script><![CDATA[
+(function() {
+  const params = new URLSearchParams(location.search);
+  const raw = params.get('urp');
+  let data = {};
+  try {
+    data = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+  } catch (err) {
+    data = {};
+  }
+
+  const num = (value) => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const setLevel = (id, value) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const n = Number.isFinite(value) ? value : num(value);
+    el.textContent = Number.isFinite(n) ? Math.round(n) : '—';
+  };
+
+  // Expected array order in urp: [stamina, intelligence, attack, defense, melee, ranged, magic]
+  const payload = Array.isArray(data) ? data : Array.isArray(data.skills) ? data.skills : [];
+  const stamina = num(payload[0]);
+  const intelligence = num(payload[1]);
+  const attack = num(payload[2]);
+  const defense = num(payload[3]);
+  const melee = num(payload[4]);
+  const ranged = num(payload[5]);
+  const magic = num(payload[6]);
+
+  // Layout slot order: 1 combat-level (calculated), 2 melee, 3 ranged, 4 magic, 5 stamina, 6 intelligence, 7 attack, 8 defense.
+  setLevel('skill-level-2', melee);
+  setLevel('skill-level-3', ranged);
+  setLevel('skill-level-4', magic);
+  setLevel('skill-level-5', stamina);
+  setLevel('skill-level-6', intelligence);
+  setLevel('skill-level-7', attack);
+  setLevel('skill-level-8', defense);
+
+  const maxMeleeRangedMagic = Math.max(melee, ranged, magic);
+  const maxAttackDefenseMeleeRangedMagic = Math.max(attack, defense, melee, ranged, magic);
+  const slot1 = 0.1 * (stamina + intelligence + attack + defense + maxMeleeRangedMagic) + 0.5 * maxAttackDefenseMeleeRangedMagic;
+  setLevel('skill-level-1', slot1);
+})();
+]]></script>
 </svg>
