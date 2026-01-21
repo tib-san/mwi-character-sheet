@@ -11,6 +11,7 @@
       --color-slot-num: #a272e4;
       --color-highlight: #dd7b5c;
       --color-text-dark-mode: #e7e7e7;
+      --color-orange-400: #fbb54b;
     }
 
     .panel { fill: var(--color-panel); fill-opacity: 0.5; stroke: var(--color-panel-stroke); stroke-width: 2; }
@@ -19,7 +20,7 @@
     .slot { fill: var(--color-slot); stroke: var(--color-slot-stroke); stroke-width: 1.5; }
     .slotNum { font: 0px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-slot-num); }
     .skillLevel { font: 700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-text-dark-mode); text-anchor: end; }
-    .enchant { font: 700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-highlight); text-anchor: start; }
+    .enchant { font: 700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-orange-400); text-anchor: start; }
   </style>
 
   <rect x="0" y="0" width="1100" height="720" fill="var(--color-background)"/>
