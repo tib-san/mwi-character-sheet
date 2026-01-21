@@ -113,7 +113,7 @@
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
-      <use href="skills_sprite.svg#milking" x="15" y="15" width="40" height="40" />
+      <use href="misc_sprite.svg#combat" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
       <use href="skills_sprite.svg#melee" x="95" y="15" width="40" height="40" />
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
