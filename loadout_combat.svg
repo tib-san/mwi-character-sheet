@@ -31,11 +31,37 @@
     "joinBy": "-",
     "split": {
       "delimiter": ";",
-      "keys": ["skills","abilities","food","housing","equipment","avatar","name"],
+      "keys": ["general","skills","equipment","abilities","food","housing","achievements"],
+      "general": {
+        "delimiter": ",",
+        "keys": ["name","avatar","outfit"],
+        "name": { "default": "Player" },
+        "avatar": { "prefix": "avatars_sprite.svg#", "default": "person_default" },
+        "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" }
+      },
       "skills": {
         "delimiter": ",",
         "keys": ["combat","stamina","intelligence","attack","defense","melee","ranged","magic"],
         "default": ""
+      },
+      "equipment": {
+        "delimiter": ",",
+        "keys": ["back","head","trinket","main_hand","body","off_hand","hands","legs","pouch","shoes","necklace","earrings","ring","charm"],
+        "default": "",
+        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
       },
       "abilities": {
         "delimiter": ",",
@@ -60,32 +86,6 @@
         "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
         "default": ""
       },
-      "equipment": {
-        "delimiter": ",",
-  "keys": ["back","head","trinket","main_hand","body","off_hand","hands","legs","pouch","shoes","necklace","earrings","ring","charm"],
-        "default": "",
-        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
-      },
-      "avatar": {
-        "delimiter": ",",
-        "keys": ["base","outfit"],
-        "base": { "prefix": "avatars_sprite.svg#", "default": "person_default" },
-        "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" }
-      },
-      "name": { "delimiter": null, "default": "Player" }
     }
   }
   -->
@@ -96,14 +96,14 @@
   <g transform="translate(0,0)">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
-    <text class="title" id="character-name" x="185" y="22" text-anchor="middle">{{name}}</text>
+    <text class="title" id="character-name" x="185" y="22" text-anchor="middle">{{general-name}}</text>
     <g id="character-avatar" transform="translate(25,30)">
       <g transform="translate(85,15) scale(0.75)">
         <svg width="200" height="200" viewBox="0 0 200 200">
-          <use id="avatar-base" href="{{avatar-base}}" width="200" height="200" />
+          <use id="avatar-base" href="{{general-avatar}}" width="200" height="200" />
         </svg>
         <svg width="200" height="200" viewBox="0 0 200 200">
-          <use id="avatar-outfit" href="{{avatar-outfit}}" width="200" height="200" />
+          <use id="avatar-outfit" href="{{general-outfit}}" width="200" height="200" />
         </svg>
       </g>
     </g>
