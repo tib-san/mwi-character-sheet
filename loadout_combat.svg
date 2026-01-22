@@ -85,7 +85,7 @@
         "delimiter": ",",
         "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
         "default": ""
-      },
+      }
     }
   }
   -->
