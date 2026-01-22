@@ -57,27 +57,27 @@
       },
       "housing": {
         "delimiter": ",",
-        "keys": ["1","2","3","4","5","6","7"],
+        "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
         "default": ""
       },
       "equipment": {
         "delimiter": ",",
-        "keys": ["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],
+  "keys": ["back","head","trinket","main_hand","body","off_hand","hands","legs","pouch","shoes","necklace","earrings","ring","charm"],
         "default": "",
-        "1":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "2":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "3":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "4":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "5":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "6":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "7":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "8":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "9":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "10": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "11": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "12": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "13": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } },
-        "14": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "default": "" } }
+        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
       },
       "avatar": {
         "delimiter": ",",
@@ -85,22 +85,19 @@
         "base": { "prefix": "avatars_sprite.svg#", "default": "person_default" },
         "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" }
       },
-      "name": { "delimiter": null, "default": "" }
+      "name": { "delimiter": null, "default": "Player" }
     }
   }
   -->
 
-  <!-- Layout constants (by convention):
-       slot = 70, gap = 10, padding = 18
-  -->
+
 <g transform="translate(10,10)">
-  <!-- ===== Equipment (center) ===== -->
+  <!-- ===== Overview ===== -->
   <g transform="translate(0,0)">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
     <text class="title" id="character-name" x="185" y="22" text-anchor="middle">{{name}}</text>
     <g id="character-avatar" transform="translate(25,30)">
-      <!--rect x="0" y="0" width="320" height="180" rx="10" ry="10" fill="var(- -color-slot)" stroke="var(- -color-slot-stroke)" stroke-width="1.5" /-->
       <g transform="translate(85,15) scale(0.75)">
         <svg width="200" height="200" viewBox="0 0 200 200">
           <use id="avatar-base" href="{{avatar-base}}" width="200" height="200" />
@@ -112,72 +109,71 @@
     </g>
   </g>
 
-  <!-- ===== Equipment (center) ===== -->
+  <!-- ===== Equipment ===== -->
   <g transform="translate(0,240)">
     <rect class="panel" x="0" y="0" width="370" height="350" />
     <text class="title" x="3" y="14">Equipment</text>
 
-    <!-- 4x4 grid -->
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0"  width="70" height="70"/>
-      <use id="equip-icon-1" href="{{equipment-1-item}}" x="15" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-1" x="6" y="12">{{equipment-1-enchantment}}</text>
+      <use id="equip-icon-back" href="{{equipment-back-item}}" x="15" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-back" x="6" y="12">{{equipment-back-enchantment}}</text>
       <rect class="slot" x="80"  y="0"  width="70" height="70"/>
-      <use id="equip-icon-2" href="{{equipment-2-item}}" x="95" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-2" x="86" y="12">{{equipment-2-enchantment}}</text>
+      <use id="equip-icon-head" href="{{equipment-head-item}}" x="95" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-head" x="86" y="12">{{equipment-head-enchantment}}</text>
       <rect class="slot" x="160" y="0"  width="70" height="70"/>
-      <use id="equip-icon-3" href="{{equipment-3-item}}" x="175" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-3" x="166" y="12">{{equipment-3-enchantment}}</text>
+      <use id="equip-icon-trinket" href="{{equipment-trinket-item}}" x="175" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-trinket" x="166" y="12">{{equipment-trinket-enchantment}}</text>
       <rect class="slot" x="260" y="0"  width="70" height="70"/>
-      <use id="equip-icon-11" href="{{equipment-11-item}}" x="275" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-11" x="266" y="12">{{equipment-11-enchantment}}</text>
+      <use id="equip-icon-necklace" href="{{equipment-necklace-item}}" x="275" y="15" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-necklace" x="266" y="12">{{equipment-necklace-enchantment}}</text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/>
-      <use id="equip-icon-4" href="{{equipment-4-item}}" x="15" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-4" x="6" y="92">{{equipment-4-enchantment}}</text>
+      <use id="equip-icon-main_hand" href="{{equipment-main_hand-item}}" x="15" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-main_hand" x="6" y="92">{{equipment-main_hand-enchantment}}</text>
       <rect class="slot" x="80"  y="80" width="70" height="70"/>
-      <use id="equip-icon-5" href="{{equipment-5-item}}" x="95" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-5" x="86" y="92">{{equipment-5-enchantment}}</text>
+      <use id="equip-icon-body" href="{{equipment-body-item}}" x="95" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-body" x="86" y="92">{{equipment-body-enchantment}}</text>
       <rect class="slot" x="160" y="80" width="70" height="70"/>
-      <use id="equip-icon-6" href="{{equipment-6-item}}" x="175" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-6" x="166" y="92">{{equipment-6-enchantment}}</text>
+      <use id="equip-icon-off_hand" href="{{equipment-off_hand-item}}" x="175" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-off_hand" x="166" y="92">{{equipment-off_hand-enchantment}}</text>
       <rect class="slot" x="260" y="80" width="70" height="70"/>
-      <use id="equip-icon-12" href="{{equipment-12-item}}" x="275" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-12" x="266" y="92">{{equipment-12-enchantment}}</text>
+      <use id="equip-icon-earrings" href="{{equipment-earrings-item}}" x="275" y="95" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-earrings" x="266" y="92">{{equipment-earrings-enchantment}}</text>
 
       <!-- row 3 -->
       <rect class="slot" x="0"   y="160" width="70" height="70"/>
-      <use id="equip-icon-7" href="{{equipment-7-item}}" x="15" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-7" x="6" y="172">{{equipment-7-enchantment}}</text>
+      <use id="equip-icon-hands" href="{{equipment-hands-item}}" x="15" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-hands" x="6" y="172">{{equipment-hands-enchantment}}</text>
       <rect class="slot" x="80"  y="160" width="70" height="70"/>
-      <use id="equip-icon-8" href="{{equipment-8-item}}" x="95" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-8" x="86" y="172">{{equipment-8-enchantment}}</text>
+      <use id="equip-icon-legs" href="{{equipment-legs-item}}" x="95" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-legs" x="86" y="172">{{equipment-legs-enchantment}}</text>
       <rect class="slot" x="160" y="160" width="70" height="70"/>
-      <use id="equip-icon-9" href="{{equipment-9-item}}" x="175" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-9" x="166" y="172">{{equipment-9-enchantment}}</text>
+      <use id="equip-icon-pouch" href="{{equipment-pouch-item}}" x="175" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-pouch" x="166" y="172">{{equipment-pouch-enchantment}}</text>
       <rect class="slot" x="260" y="160" width="70" height="70"/>
-      <use id="equip-icon-13" href="{{equipment-13-item}}" x="275" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-13" x="266" y="172">{{equipment-13-enchantment}}</text>
+      <use id="equip-icon-ring" href="{{equipment-ring-item}}" x="275" y="175" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-ring" x="266" y="172">{{equipment-ring-enchantment}}</text>
 
       <!-- row 4 -->
       <rect class="slot" x="80"  y="240" width="70" height="70"/>
-      <use id="equip-icon-10" href="{{equipment-10-item}}" x="95" y="255" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-10" x="86" y="252">{{equipment-10-enchantment}}</text>
+      <use id="equip-icon-shoes" href="{{equipment-shoes-item}}" x="95" y="255" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-shoes" x="86" y="252">{{equipment-shoes-enchantment}}</text>
       <rect class="slot" x="260" y="240" width="70" height="70"/>
-      <use id="equip-icon-14" href="{{equipment-14-item}}" x="275" y="255" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-14" x="266" y="252">{{equipment-14-enchantment}}</text>
+      <use id="equip-icon-charm" href="{{equipment-charm-item}}" x="275" y="255" width="40" height="40" />
+      <text class="enchant" id="equip-enchant-charm" x="266" y="252">{{equipment-charm-enchantment}}</text>
     </g>
   </g>
 
-  <!-- ===== Right side: Food (rows of 3) ===== -->
+  <!-- ===== Food ===== -->
   <g transform="translate(380,0)">
     <rect class="panel" x="0" y="0" width="350" height="190" />
     <text class="title" x="3" y="14">Food</text>
 
     <g transform="translate(55,20)">
-      <!-- row 1 (1-3) -->
+      <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
       <use id="food-icon-1" href="{{food-1}}" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
@@ -185,7 +181,7 @@
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
       <use id="food-icon-3" href="{{food-3}}" x="175" y="15" width="40" height="40" />
 
-      <!-- row 2 (4-6) -->
+      <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">4</text>
       <use id="food-icon-4" href="{{food-4}}" x="15" y="95" width="40" height="40" />
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">5</text>
@@ -195,7 +191,7 @@
     </g>
   </g>
 
-  <!-- ===== Right side: Abilities (rows of 3) ===== -->
+  <!-- ===== Abilities ===== -->
   <g transform="translate(380,200)">
     <rect class="panel" x="0" y="0" width="350" height="190" />
     <text class="title" x="3" y="14">Abilities</text>
@@ -231,7 +227,7 @@
     </g>
   </g>
 
-  <!-- ===== Skills (8 slots) ===== -->
+  <!-- ===== Skills ===== -->
   <g transform="translate(380,400)">
     <rect class="panel" x="0" y="0" width="350" height="190" />
     <text class="title" x="3" y="14">Skills</text>
@@ -240,61 +236,66 @@
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
       <use href="misc_sprite.svg#combat" x="15" y="15" width="40" height="40" />
+      <text class="skillLevel" id="skill-level-1" x="65" y="14">{{skills-combat}}</text>
+
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
       <use href="skills_sprite.svg#melee" x="95" y="15" width="40" height="40" />
+      <text class="skillLevel" id="skill-level-2" x="145" y="14">{{skills-melee}}</text>
+
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
       <use href="skills_sprite.svg#ranged" x="175" y="15" width="40" height="40" />
+      <text class="skillLevel" id="skill-level-3" x="225" y="14">{{skills-ranged}}</text>
+
       <rect class="slot" x="240" y="0" width="70" height="70"/><text class="slotNum" x="246" y="14">4</text>
       <use href="skills_sprite.svg#magic" x="255" y="15" width="40" height="40" />
-      <text class="skillLevel" id="skill-level-1" x="65" y="14">{{skills-combat}}</text>
-      <text class="skillLevel" id="skill-level-2" x="145" y="14">{{skills-melee}}</text>
-      <text class="skillLevel" id="skill-level-3" x="225" y="14">{{skills-ranged}}</text>
       <text class="skillLevel" id="skill-level-4" x="305" y="14">{{skills-magic}}</text>
 
       <!-- row 2 -->
-      <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">5</text>
+      <rect class="slot" x="0"   y="80" width="70" height="70"/>
       <use href="skills_sprite.svg#stamina" x="15" y="95" width="40" height="40" />
-      <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">6</text>
-      <use href="skills_sprite.svg#intelligence" x="95" y="95" width="40" height="40" />
-      <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">7</text>
-      <use href="skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
-      <rect class="slot" x="240" y="80" width="70" height="70"/><text class="slotNum" x="246" y="94">8</text>
-      <use href="skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-5" x="65" y="94">{{skills-stamina}}</text>
+
+      <rect class="slot" x="80"  y="80" width="70" height="70"/>
+      <use href="skills_sprite.svg#intelligence" x="95" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-6" x="145" y="94">{{skills-intelligence}}</text>
+
+      <rect class="slot" x="160" y="80" width="70" height="70"/>
+      <use href="skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-7" x="225" y="94">{{skills-attack}}</text>
+
+      <rect class="slot" x="240" y="80" width="70" height="70"/>
+      <use href="skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-8" x="305" y="94">{{skills-defense}}</text>
     </g>
   </g>
 
-  <!-- ===== Housing (left of Equipment, vertical) ===== -->
+  <!-- ===== Housing ===== -->
   <g transform="translate(740,0)">
     <rect class="panel" x="0" y="0" width="110" height="590" />
     <text class="title" x="3" y="14">Housing</text>
 
-    <!-- 7 stacked slots -->
     <g transform="translate(20,20)">
-      <rect class="slot" x="0" y="0"   width="70" height="70"/><text class="slotNum" x="6" y="14">1</text>
-      <use id="housing-icon-1" href="skills_sprite.svg#stamina" x="15" y="15" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-1" x="65" y="14">{{housing-1}}</text>
-      <rect class="slot" x="0" y="80"  width="70" height="70"/><text class="slotNum" x="6" y="94">2</text>
-      <use id="housing-icon-2" href="skills_sprite.svg#intelligence" x="15" y="95" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-2" x="65" y="94">{{housing-2}}</text>
-      <rect class="slot" x="0" y="160" width="70" height="70"/><text class="slotNum" x="6" y="174">3</text>
-      <use id="housing-icon-3" href="skills_sprite.svg#attack" x="15" y="175" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-3" x="65" y="174">{{housing-3}}</text>
-      <rect class="slot" x="0" y="240" width="70" height="70"/><text class="slotNum" x="6" y="254">4</text>
-      <use id="housing-icon-4" href="skills_sprite.svg#defense" x="15" y="255" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-4" x="65" y="254">{{housing-4}}</text>
-      <rect class="slot" x="0" y="320" width="70" height="70"/><text class="slotNum" x="6" y="334">5</text>
-      <use id="housing-icon-5" href="skills_sprite.svg#melee" x="15" y="335" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-5" x="65" y="334">{{housing-5}}</text>
-      <rect class="slot" x="0" y="400" width="70" height="70"/><text class="slotNum" x="6" y="414">6</text>
-      <use id="housing-icon-6" href="skills_sprite.svg#ranged" x="15" y="415" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-6" x="65" y="414">{{housing-6}}</text>
-      <rect class="slot" x="0" y="480" width="70" height="70"/><text class="slotNum" x="6" y="494">7</text>
-      <use id="housing-icon-7" href="skills_sprite.svg#magic" x="15" y="495" width="40" height="40" />
-      <text class="skillLevel" id="housing-level-7" x="65" y="494">{{housing-7}}</text>
+      <rect class="slot" x="0" y="0"   width="70" height="70"/>
+      <use id="housing-icon-dining_room" href="skills_sprite.svg#stamina" x="15" y="15" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-dining_room" x="65" y="14">{{housing-dining_room}}</text>
+      <rect class="slot" x="0" y="80"  width="70" height="70"/>
+      <use id="housing-icon-library" href="skills_sprite.svg#intelligence" x="15" y="95" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-library" x="65" y="94">{{housing-library}}</text>
+      <rect class="slot" x="0" y="160" width="70" height="70"/>
+      <use id="housing-icon-dojo" href="skills_sprite.svg#attack" x="15" y="175" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-dojo" x="65" y="174">{{housing-dojo}}</text>
+      <rect class="slot" x="0" y="240" width="70" height="70"/>
+      <use id="housing-icon-armory" href="skills_sprite.svg#defense" x="15" y="255" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-armory" x="65" y="254">{{housing-armory}}</text>
+      <rect class="slot" x="0" y="320" width="70" height="70"/>
+      <use id="housing-icon-gym" href="skills_sprite.svg#melee" x="15" y="335" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-gym" x="65" y="334">{{housing-gym}}</text>
+      <rect class="slot" x="0" y="400" width="70" height="70"/>
+      <use id="housing-icon-archery_range" href="skills_sprite.svg#ranged" x="15" y="415" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-archery_range" x="65" y="414">{{housing-archery_range}}</text>
+      <rect class="slot" x="0" y="480" width="70" height="70"/>
+      <use id="housing-icon-mystical_study" href="skills_sprite.svg#magic" x="15" y="495" width="40" height="40" />
+      <text class="skillLevel" id="housing-level-mystical_study" x="65" y="494">{{housing-mystical_study}}</text>
     </g>
   </g>
 </g>
