@@ -261,9 +261,13 @@
     .slotNum { font: 0px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-slot-num); }
     .skillLevel { font: 700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-text-dark-mode); text-anchor: end; }
     .enchant { font: 700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-orange-400); text-anchor: start; }
+
     .nameRow[data-name-icon=""] .nameRow-icon,
     .nameRow:not([data-name-icon]) .nameRow-icon { display: none; }
+    .nameRow[data-name-icon=""] .nameRow-name,
+    .nameRow:not([data-name-icon]) .nameRow-name { transform: translate(-18px, 0); }
     .nameRow-inner { transform-box: fill-box; transform-origin: center; transform: translate(-50%, -50%); }
+
     .achIcon { filter: none; opacity: 1; }
     .achBox { fill: none; stroke-width: 1.5; stroke: var(--stroke-color); stroke-linejoin: round; stroke-linecap: round; }
     .achSlot:nth-child(1) { --stroke-color: var(--color-neutral-200); }
@@ -274,7 +278,6 @@
     .achSlot:nth-child(6) { --stroke-color: var(--color-orange-500); }
     .achSlot[data-achieved="0"] .achIcon,
     .achSlot[data-achieved="0"] .achBox { filter: grayscale(100%); opacity: 0.5; --stroke-color: var(--color-neutral-200); }
-
 
 
     .color_burble { fill: var(--color-burble-250); }
