@@ -264,6 +264,17 @@
     .nameRow[data-name-icon=""] .nameRow-icon,
     .nameRow:not([data-name-icon]) .nameRow-icon { display: none; }
     .nameRow-inner { transform-box: fill-box; transform-origin: center; transform: translate(-50%, -50%); }
+    .achIcon { filter: none; opacity: 1; }
+    .achBox { fill: none; stroke-width: 1.5; stroke: var(--stroke-color); stroke-linejoin: round; stroke-linecap: round; }
+    .achSlot:nth-child(1) { --stroke-color: var(--color-neutral-200); }
+    .achSlot:nth-child(2) { --stroke-color: var(--color-jade-500); }
+    .achSlot:nth-child(3) { --stroke-color: var(--color-ocean-500); }
+    .achSlot:nth-child(4) { --stroke-color: var(--color-burble-350); }
+    .achSlot:nth-child(5) { --stroke-color: var(--color-scarlet-500); }
+    .achSlot:nth-child(6) { --stroke-color: var(--color-orange-500); }
+    .achSlot[data-achieved="0"] .achIcon,
+    .achSlot[data-achieved="0"] .achBox { filter: grayscale(100%); opacity: 0.5; --stroke-color: var(--color-neutral-200); }
+
 
 
     .color_burble { fill: var(--color-burble-250); }
@@ -349,6 +360,11 @@
         "delimiter": ",",
         "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
         "default": ""
+      },
+      "achievements": {
+        "delimiter": "",
+        "keys": ["beginner","novice","adept","veteral","elite","champion"],
+        "default": "0"
       }
     }
   }
@@ -360,20 +376,51 @@
   <g transform="translate(0,0)">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
-    <g transform="translate(185,40)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
-      <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
-        <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
-        <text class="title nameRow-name color_{{general-name_color}} color_name_{{general-name}}" text x="18" y="0" dominant-baseline="middle">{{general-name}}</text>
+
+    <g id="character-overview" transform="translate(185,0)">
+      <g transform="translate(0,40)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
+        <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
+          <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
+          <text class="title nameRow-name color_{{general-name_color}} color_name_{{general-name}}" text x="18" y="0" dominant-baseline="middle">{{general-name}}</text>
+        </g>
       </g>
-    </g>
-    <g id="character-avatar" transform="translate(25,30)">
-      <g transform="translate(85,15) scale(0.75)">
-        <svg width="200" height="200" viewBox="0 0 200 200">
-          <use id="avatar-base" href="{{general-avatar}}" width="200" height="200" />
-        </svg>
-        <svg width="200" height="200" viewBox="0 0 200 200">
-          <use id="avatar-outfit" href="{{general-outfit}}" width="200" height="200" />
-        </svg>
+
+      <g id="character-avatar" transform="translate(-160,30)">
+        <g transform="translate(85,15) scale(0.75)">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <use id="avatar-base" href="{{general-avatar}}" width="200" height="200" />
+          </svg>
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <use id="avatar-outfit" href="{{general-outfit}}" width="200" height="200" />
+          </svg>
+        </g>
+      </g>
+
+      <g id="character-achievements" transform="translate(0,205)">
+        <g class="achSlot" data-achieved="{{achievements-beginner}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_100" x="-70" y="0" width="20" height="20" />
+          <rect class="achBox" x="-70" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
+        <g class="achSlot" data-achieved="{{achievements-novice}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_250" x="-46" y="0" width="20" height="20" />
+          <rect class="achBox" x="-46" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
+        <g class="achSlot" data-achieved="{{achievements-adept}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_500" x="-22" y="0" width="20" height="20" />
+          <rect class="achBox" x="-22" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
+        <g class="achSlot" data-achieved="{{achievements-veteral}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_1000" x="2" y="0" width="20" height="20" />
+          <rect class="achBox" x="2" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
+        <g class="achSlot" data-achieved="{{achievements-elite}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_1500" x="26" y="0" width="20" height="20" />
+          <rect class="achBox" x="26" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
+        <g class="achSlot" data-achieved="{{achievements-champion}}">
+          <use class="achIcon" href="achievements_sprite.svg#total_level_1800" x="50" y="0" width="20" height="20" />
+          <rect class="achBox" x="50" y="0" width="20" height="20" rx="3" ry="3" />
+        </g>
       </g>
     </g>
   </g>
