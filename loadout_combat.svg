@@ -1,6 +1,246 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="870" height="610" viewBox="0 0 870 610">
+  <defs>
+    <linearGradient id="gradient-fancy_burble" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-burble-300)"/>
+      <stop offset="3%"  stop-color="var(--color-burble-300)"/>
+      <stop offset="15%" stop-color="var(--color-burble-100)"/>
+      <stop offset="30%" stop-color="var(--color-burble-100)"/>
+      <stop offset="50%" stop-color="var(--color-burble-200)"/>
+      <stop offset="95%" stop-color="var(--color-burble-300)"/>
+      <stop offset="100%" stop-color="var(--color-burble-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-fancy_blue" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-ocean-300)"/>
+      <stop offset="3%"  stop-color="var(--color-ocean-300)"/>
+      <stop offset="15%" stop-color="var(--color-ocean-100)"/>
+      <stop offset="30%" stop-color="var(--color-ocean-100)"/>
+      <stop offset="50%" stop-color="var(--color-ocean-200)"/>
+      <stop offset="95%" stop-color="var(--color-ocean-300)"/>
+      <stop offset="100%" stop-color="var(--color-ocean-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-fancy_green" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-jade-300)"/>
+      <stop offset="3%"  stop-color="var(--color-jade-300)"/>
+      <stop offset="15%" stop-color="var(--color-jade-100)"/>
+      <stop offset="30%" stop-color="var(--color-jade-100)"/>
+      <stop offset="50%" stop-color="var(--color-jade-200)"/>
+      <stop offset="95%" stop-color="var(--color-jade-300)"/>
+      <stop offset="100%" stop-color="var(--color-jade-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-fancy_yellow" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-orange-300)"/>
+      <stop offset="3%"  stop-color="var(--color-orange-300)"/>
+      <stop offset="15%" stop-color="var(--color-orange-100)"/>
+      <stop offset="30%" stop-color="var(--color-orange-100)"/>
+      <stop offset="50%" stop-color="var(--color-orange-200)"/>
+      <stop offset="95%" stop-color="var(--color-orange-300)"/>
+      <stop offset="100%" stop-color="var(--color-orange-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-fancy_coral" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-coral-300)"/>
+      <stop offset="3%"  stop-color="var(--color-coral-300)"/>
+      <stop offset="15%" stop-color="var(--color-coral-100)"/>
+      <stop offset="30%" stop-color="var(--color-coral-100)"/>
+      <stop offset="50%" stop-color="var(--color-coral-200)"/>
+      <stop offset="95%" stop-color="var(--color-coral-300)"/>
+      <stop offset="100%" stop-color="var(--color-coral-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-fancy_pink" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-scarlet-300)"/>
+      <stop offset="3%"  stop-color="var(--color-scarlet-300)"/>
+      <stop offset="15%" stop-color="var(--color-scarlet-100)"/>
+      <stop offset="30%" stop-color="var(--color-scarlet-100)"/>
+      <stop offset="50%" stop-color="var(--color-scarlet-200)"/>
+      <stop offset="95%" stop-color="var(--color-scarlet-300)"/>
+      <stop offset="100%" stop-color="var(--color-scarlet-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-iron" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-neutral-300)"/>
+      <stop offset="3%"  stop-color="var(--color-neutral-300)"/>
+      <stop offset="15%" stop-color="var(--color-neutral-100)"/>
+      <stop offset="30%" stop-color="var(--color-neutral-0)"/>
+      <stop offset="50%" stop-color="var(--color-neutral-200)"/>
+      <stop offset="95%" stop-color="var(--color-neutral-300)"/>
+      <stop offset="100%" stop-color="var(--color-neutral-300)"/>
+    </linearGradient>
+
+    <linearGradient id="gradient-rainbow" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"  stop-color="var(--color-coral-500)"/>
+      <stop offset="25%" stop-color="var(--color-orange-300)"/>
+      <stop offset="50%" stop-color="var(--color-jade-500)"/>
+      <stop offset="75%" stop-color="var(--color-ocean-400)"/>
+      <stop offset="87%" stop-color="var(--color-space-400)"/>
+      <stop offset="100%" stop-color="var(--color-burble-300)"/>
+    </linearGradient>
+
+    <filter id="shadow-rainbow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <linearGradient id="gradient-golden" gradientUnits="objectBoundingBox" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%"   stop-color="var(--color-orange-600)"/>
+      <stop offset="10%"  stop-color="var(--color-orange-500)"/>
+      <stop offset="15%"  stop-color="var(--color-orange-300)"/>
+      <stop offset="30%"  stop-color="var(--color-neutral-0)"/>
+      <stop offset="45%"  stop-color="var(--color-orange-300)"/>
+      <stop offset="90%"  stop-color="var(--color-orange-500)"/>
+      <stop offset="100%" stop-color="var(--color-orange-600)"/>
+    </linearGradient>
+
+    <filter id="shadow-golden" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
   <style>
     :root {
+      --color-primary:var(--color-space-600);
+      --color-primary-hover:var(--color-space-500);
+      --color-secondary:var(--color-burble-350);
+      --color-secondary-hover:var(--color-burble-300);
+      --color-label:var(--color-space-300);
+      --color-progress:var(--color-burble-350);
+      --color-hitpoints:var(--color-jade-500);
+      --color-manapoints:var(--color-ocean-400);
+      --color-ability:#dd7b5c;
+      --color-ability-hover:#e49880;
+      --color-market-sell:#d95961;
+      --color-market-sell-hover:#e38289;
+      --color-market-buy:#2fc4a7;
+      --color-market-buy-hover:#59d0b9;
+      --color-success:var(--color-orange-550);
+      --color-success-hover:var(--color-orange-500);
+      --color-warning:#db3333;
+      --color-warning-hover:#eb3f3f;
+      --color-empty:#d0d0d0;
+      --color-empty-hover:#e2e2e2;
+      --color-disabled:#959595;
+      --color-divider:var(--color-midnight-400);
+      --color-text-dark-mode:var(--color-neutral-100);
+      --color-background:#131c37;
+      --color-background-game:var(--color-midnight-900);
+      --color-burble-100:#e3daf1;
+      --color-burble-200:#c7b5e3;
+      --color-burble-250:#baa2db;
+      --color-burble-300:#ac8fd4;
+      --color-burble-350:#a272e4;
+      --color-burble-400:#906ac6;
+      --color-burble-500:#7445b8;
+      --color-burble-600:#5d3793;
+      --color-coral-100:#ebb4a2;
+      --color-coral-200:#e49880;
+      --color-coral-250:#e18a6e;
+      --color-coral-300:#dd7b5c;
+      --color-coral-400:#d55f3a;
+      --color-coral-500:#ce4317;
+      --color-coral-600:#af3914;
+      --color-coral-700:#902f10;
+      --color-jade-100:#d5f3ed;
+      --color-jade-200:#ace7dc;
+      --color-jade-300:#82dcca;
+      --color-jade-400:#59d0b9;
+      --color-jade-500:#2fc4a7;
+      --color-jade-600:#269d86;
+      --color-midnight-100:#454771;
+      --color-midnight-200:#3f4166;
+      --color-midnight-300:#393a5b;
+      --color-midnight-400:#323450;
+      --color-midnight-500:#2c2e45;
+      --color-midnight-550:#292a40;
+      --color-midnight-600:#26273a;
+      --color-midnight-700:#20212f;
+      --color-midnight-800:#191a24;
+      --color-midnight-900:#131419;
+      --color-midnight-100-opacity-50:rgba(69,71,113,0.5019607843137255);
+      --color-midnight-200-opacity-50:rgba(63,65,102,0.5019607843137255);
+      --color-midnight-300-opacity-50:rgba(57,58,91,0.5019607843137255);
+      --color-midnight-400-opacity-50:rgba(50,52,80,0.5019607843137255);
+      --color-midnight-500-opacity-50:rgba(44,46,69,0.5019607843137255);
+      --color-midnight-600-opacity-50:rgba(38,39,58,0.5019607843137255);
+      --color-midnight-700-opacity-50:rgba(32,33,47,0.5019607843137255);
+      --color-midnight-800-opacity-50:rgba(25,26,36,0.5019607843137255);
+      --color-midnight-900-opacity-50:rgba(19,20,25,0.5019607843137255);
+      --color-midnight-100-opacity-25:rgba(69,71,113,0.25098039215686274);
+      --color-midnight-200-opacity-25:rgba(63,65,102,0.25098039215686274);
+      --color-midnight-300-opacity-25:rgba(57,58,91,0.25098039215686274);
+      --color-midnight-400-opacity-25:rgba(50,52,80,0.25098039215686274);
+      --color-midnight-500-opacity-25:rgba(44,46,69,0.25098039215686274);
+      --color-midnight-600-opacity-25:rgba(38,39,58,0.25098039215686274);
+      --color-midnight-700-opacity-25:rgba(32,33,47,0.25098039215686274);
+      --color-midnight-800-opacity-25:rgba(25,26,36,0.25098039215686274);
+      --color-midnight-900-opacity-25:rgba(19,20,25,0.25098039215686274);
+      --color-neutral-0:#fff;
+      --color-neutral-50:#f3f3f3;
+      --color-neutral-100:#e7e7e7;
+      --color-neutral-200:#d0d0d0;
+      --color-neutral-300:#b8b8b8;
+      --color-neutral-400:#a1a1a1;
+      --color-neutral-500:#898989;
+      --color-neutral-600:#6e6e6e;
+      --color-neutral-700:#525252;
+      --color-neutral-800:#373737;
+      --color-neutral-900:#1b1b1b;
+      --color-neutral-0-opacity-25:hsla(0,0%,100%,0.25098039215686274);
+      --color-neutral-0-opacity-50:hsla(0,0%,100%,0.5019607843137255);
+      --color-neutral-0-opacity-75:hsla(0,0%,100%,0.6901960784313725);
+      --color-ocean-100:#d2e8f9;
+      --color-ocean-200:#a5d1f3;
+      --color-ocean-250:#8ec6f0;
+      --color-ocean-300:#77baec;
+      --color-ocean-350:#61afe9;
+      --color-ocean-400:#4aa3e6;
+      --color-ocean-500:#1d8ce0;
+      --color-ocean-600:#1770b3;
+      --color-ocean-700:#115486;
+      --color-ocean-800:#0c385a;
+      --color-orange-100:#feecd2;
+      --color-orange-200:#fddaa5;
+      --color-orange-300:#fcc778;
+      --color-orange-400:#fbb54b;
+      --color-orange-500:#faa21e;
+      --color-orange-550:#ee9a1d;
+      --color-orange-600:#e1921b;
+      --color-orange-650:#c57a09;
+      --color-orange-700:#966112;
+      --color-orange-800:#64410c;
+      --color-orange-500-opacity-50:rgba(250,162,30,0.5019607843137255);
+      --color-scarlet-100:#f6d6d8;
+      --color-scarlet-200:#ecadb1;
+      --color-scarlet-300:#e3858b;
+      --color-scarlet-400:#d95c64;
+      --color-scarlet-500:#d0333d;
+      --color-scarlet-600:#a62931;
+      --color-scarlet-700:#7d1f25;
+      --color-scarlet-800:#531418;
+      --color-space-100:#dde2f8;
+      --color-space-200:#bbc5f1;
+      --color-space-250:#a9b6ed;
+      --color-space-300:#98a7e9;
+      --color-space-400:#768ae2;
+      --color-space-500:#546ddb;
+      --color-space-600:#4357af;
+      --color-space-650:#3c4e9d;
+      --color-space-700:#35458b;
+      --color-space-750:#2e3c79;
+      --color-space-800:#273366;
+      --color-space-850:#202a54;
+      --color-space-880:#1c2549;
+      --color-space-900:#192142;
+      --color-space-950:#121830
       --color-background: #131c37;
       --color-panel: #202a54;
       --color-panel-stroke: #4357af;
@@ -21,6 +261,28 @@
     .slotNum { font: 0px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-slot-num); }
     .skillLevel { font: 700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-text-dark-mode); text-anchor: end; }
     .enchant { font: 700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--color-orange-400); text-anchor: start; }
+    .nameRow[data-name-icon=""] .nameRow-icon,
+    .nameRow:not([data-name-icon]) .nameRow-icon { display: none; }
+    .nameRow-inner { transform-box: fill-box; transform-origin: center; transform: translate(-50%, -50%); }
+
+
+    .color_burble { fill: var(--color-burble-250); }
+    .color_blue { fill: var(--color-ocean-250); }
+    .color_green { fill: var(--color-jade-300); }
+    .color_yellow { fill: var(--color-orange-300); }
+    .color_coral { fill: var(--color-coral-250); }
+    .color_pink { fill: var(--color-scarlet-200); }
+
+    .color_fancy_burble { fill: url(#gradient-fancy_burble); }
+    .color_fancy_blue { fill: url(#gradient-fancy_blue); }
+    .color_fancy_green { fill: url(#gradient-fancy_green); }
+    .color_fancy_yellow { fill: url(#gradient-fancy_yellow); }
+    .color_fancy_coral { fill: url(#gradient-fancy_coral); }
+    .color_fancy_pink { fill: url(#gradient-fancy_pink); }
+    .color_iron { fill: url(#gradient-iron); }
+    .color_rainbow { fill: url(#gradient-rainbow); filter: url(#shadow-rainbow); }
+    .color_golden { fill: url(#gradient-golden); filter: url(#shadow-golden); }
+
   </style>
 
   <rect x="0" y="0" width="1100" height="720" fill="var(--color-background)"/>
@@ -34,10 +296,12 @@
       "keys": ["general","skills","equipment","abilities","food","housing","achievements"],
       "general": {
         "delimiter": ",",
-        "keys": ["name","avatar","outfit"],
+        "keys": ["name","avatar","outfit","name_icon","name_color"],
         "name": { "default": "Player" },
         "avatar": { "prefix": "avatars_sprite.svg#", "default": "person_default" },
-        "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" }
+        "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" },
+        "name_icon": { "prefix": "chat_icons_sprite.svg#", "default": "" },
+        "name_color": { "default": "" }
       },
       "skills": {
         "delimiter": ",",
@@ -96,7 +360,12 @@
   <g transform="translate(0,0)">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
-    <text class="title" id="character-name" x="185" y="22" text-anchor="middle">{{general-name}}</text>
+    <g transform="translate(185,40)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
+      <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
+        <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
+        <text class="title nameRow-name color_{{general-name_color}} color_name_{{general-name}}" text x="18" y="0" dominant-baseline="middle">{{general-name}}</text>
+      </g>
+    </g>
     <g id="character-avatar" transform="translate(25,30)">
       <g transform="translate(85,15) scale(0.75)">
         <svg width="200" height="200" viewBox="0 0 200 200">
