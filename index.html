@@ -285,16 +285,27 @@
         if (text) parsedByFile.set(file, new DOMParser().parseFromString(text, 'image/svg+xml'));
       });
 
+      const idMap = new Map(); // key: file#symbolId -> newId
       refs.forEach(({ file, symbolId, el }) => {
         const doc = parsedByFile.get(file);
         if (!doc) return;
-        const symbol = doc.getElementById(symbolId);
-        if (symbol && !defs.querySelector(`[id="${symbolId}"]`)) {
-          defs.appendChild(symbol.cloneNode(true));
+        const key = `${file}#${symbolId}`;
+        let newId = idMap.get(key);
+        if (!newId) {
+          const symbol = doc.getElementById(symbolId);
+          if (!symbol) return;
+          const safeFile = file.replace(/[^\w-]/g, '_');
+          newId = `${safeFile}__${symbolId}`;
+          idMap.set(key, newId);
+          if (!defs.querySelector(`[id="${newId}"]`)) {
+            const cloned = symbol.cloneNode(true);
+            cloned.setAttribute('id', newId);
+            defs.appendChild(cloned);
+          }
         }
         const href = el.getAttribute('href') || el.getAttribute('xlink:href');
         if (href && href.startsWith(`${file}#${symbolId}`)) {
-          el.setAttribute('href', `#${symbolId}`);
+          el.setAttribute('href', `#${newId}`);
           el.removeAttribute('xlink:href');
         }
       });
