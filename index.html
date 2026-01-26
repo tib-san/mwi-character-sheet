@@ -231,6 +231,7 @@
         const svgText = await fetchSvg();
         const renderMap = readRenderMap(svgText);
         const parsed = (urpt && renderMap && renderMap.split) ? (parseByMap(urpt, renderMap.split) || {}) : {};
+        applyComputedCombat(parsed);
         currentParsed = parsed;
         const replacements = flatten(parsed, renderMap ? renderMap.split : null, renderMap ? renderMap.joinBy || '-' : '-', '');
         const templated = applyReplacements(svgText, replacements);
@@ -341,6 +342,34 @@
           img.removeAttribute('xlink:href');
         }
       });
+    }
+
+    function applyComputedCombat(parsed) {
+      if (!parsed || !parsed.skills) return;
+      const s = parsed.skills;
+      if (s.combat && String(s.combat).trim() !== '') return;
+
+      const fields = ['stamina', 'intelligence', 'attack', 'defense', 'melee', 'ranged', 'magic'];
+      const hasOthers = fields.some((k) => (s[k] ?? '').toString().trim() !== '');
+      if (!hasOthers) return;
+
+      const num = (val) => {
+        const n = parseFloat(val);
+        return Number.isFinite(n) ? n : 0;
+      };
+
+      const stamina = num(s.stamina);
+      const intelligence = num(s.intelligence);
+      const attack = num(s.attack);
+      const defense = num(s.defense);
+      const melee = num(s.melee);
+      const ranged = num(s.ranged);
+      const magic = num(s.magic);
+      const maxOffense = Math.max(melee, ranged, magic);
+      const base = 0.1 * (stamina + intelligence + attack + defense + maxOffense);
+      const boost = 0.5 * Math.max(attack, defense, melee, ranged, magic);
+      const combatLevel = Math.round(base + boost);
+      s.combat = combatLevel.toString();
     }
   </script>
 </body>
