@@ -312,9 +312,9 @@
         "delimiter": ",",
         "keys": ["name","avatar","outfit","name_icon","name_color"],
         "name": { "default": "Player" },
-        "avatar": { "prefix": "avatars_sprite.svg#", "default": "person_default" },
-        "outfit": { "prefix": "avatar_outfits_sprite.svg#", "default": "tshirt_default" },
-        "name_icon": { "prefix": "chat_icons_sprite.svg#", "default": "" },
+        "avatar": { "prefix": "/assets/sprites/avatars_sprite.svg#", "default": "person_default" },
+        "outfit": { "prefix": "/assets/sprites/avatar_outfits_sprite.svg#", "default": "tshirt_default" },
+        "name_icon": { "prefix": "/assets/sprites/chat_icons_sprite.svg#", "default": "" },
         "name_color": { "default": "" }
       },
       "skills": {
@@ -326,37 +326,37 @@
         "delimiter": ",",
         "keys": ["back","head","trinket","main_hand","body","off_hand","hands","legs","pouch","shoes","necklace","earrings","ring","charm"],
         "default": "",
-        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
+        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
+        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "/assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
       },
       "abilities": {
         "delimiter": ",",
         "keys": ["1","2","3","4","5","6","7","8"],
-        "1":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "2":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "3":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "4":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "5":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "6":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "7":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
-        "8":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "abilities_sprite.svg#", "default": "" }, "level": { "default": "" } }
+        "1":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "2":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "3":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "4":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "5":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "6":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "7":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
+        "8":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "/assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } }
       },
       "food": {
         "delimiter": ",",
         "keys": ["1","2","3","4","5","6"],
-        "prefix": "items_sprite.svg#",
+        "prefix": "/assets/sprites/items_sprite.svg#",
         "default": ""
       },
       "housing": {
@@ -401,27 +401,27 @@
 
       <g id="character-achievements" transform="translate(0,205)">
         <g class="achSlot" data-achieved="{{achievements-beginner}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_100" x="-70" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_100" x="-70" y="0" width="20" height="20" />
           <rect class="achBox" x="-70" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
         <g class="achSlot" data-achieved="{{achievements-novice}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_250" x="-46" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_250" x="-46" y="0" width="20" height="20" />
           <rect class="achBox" x="-46" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
         <g class="achSlot" data-achieved="{{achievements-adept}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_500" x="-22" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_500" x="-22" y="0" width="20" height="20" />
           <rect class="achBox" x="-22" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
         <g class="achSlot" data-achieved="{{achievements-veteral}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_1000" x="2" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_1000" x="2" y="0" width="20" height="20" />
           <rect class="achBox" x="2" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
         <g class="achSlot" data-achieved="{{achievements-elite}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_1500" x="26" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_1500" x="26" y="0" width="20" height="20" />
           <rect class="achBox" x="26" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
         <g class="achSlot" data-achieved="{{achievements-champion}}">
-          <use class="achIcon" href="achievements_sprite.svg#total_level_1800" x="50" y="0" width="20" height="20" />
+          <use class="achIcon" href="/assets/sprites/achievements_sprite.svg#total_level_1800" x="50" y="0" width="20" height="20" />
           <rect class="achBox" x="50" y="0" width="20" height="20" rx="3" ry="3" />
         </g>
       </g>
@@ -554,36 +554,36 @@
     <g transform="translate(20,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
-      <use href="misc_sprite.svg#combat" x="15" y="15" width="40" height="40" />
+      <use href="/assets/sprites/misc_sprite.svg#combat" x="15" y="15" width="40" height="40" />
       <text class="skillLevel" id="skill-level-1" x="65" y="14">{{skills-combat}}</text>
 
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
-      <use href="skills_sprite.svg#melee" x="95" y="15" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#melee" x="95" y="15" width="40" height="40" />
       <text class="skillLevel" id="skill-level-2" x="145" y="14">{{skills-melee}}</text>
 
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
-      <use href="skills_sprite.svg#ranged" x="175" y="15" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#ranged" x="175" y="15" width="40" height="40" />
       <text class="skillLevel" id="skill-level-3" x="225" y="14">{{skills-ranged}}</text>
 
       <rect class="slot" x="240" y="0" width="70" height="70"/><text class="slotNum" x="246" y="14">4</text>
-      <use href="skills_sprite.svg#magic" x="255" y="15" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#magic" x="255" y="15" width="40" height="40" />
       <text class="skillLevel" id="skill-level-4" x="305" y="14">{{skills-magic}}</text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/>
-      <use href="skills_sprite.svg#stamina" x="15" y="95" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#stamina" x="15" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-5" x="65" y="94">{{skills-stamina}}</text>
 
       <rect class="slot" x="80"  y="80" width="70" height="70"/>
-      <use href="skills_sprite.svg#intelligence" x="95" y="95" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#intelligence" x="95" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-6" x="145" y="94">{{skills-intelligence}}</text>
 
       <rect class="slot" x="160" y="80" width="70" height="70"/>
-      <use href="skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#attack" x="175" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-7" x="225" y="94">{{skills-attack}}</text>
 
       <rect class="slot" x="240" y="80" width="70" height="70"/>
-      <use href="skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
+      <use href="/assets/sprites/skills_sprite.svg#defense" x="255" y="95" width="40" height="40" />
       <text class="skillLevel" id="skill-level-8" x="305" y="94">{{skills-defense}}</text>
     </g>
   </g>
@@ -595,25 +595,25 @@
 
     <g transform="translate(20,20)">
       <rect class="slot" x="0" y="0"   width="70" height="70"/>
-      <use id="housing-icon-dining_room" href="skills_sprite.svg#stamina" x="15" y="15" width="40" height="40" />
+      <use id="housing-icon-dining_room" href="/assets/sprites/skills_sprite.svg#stamina" x="15" y="15" width="40" height="40" />
       <text class="skillLevel" id="housing-level-dining_room" x="65" y="14">{{housing-dining_room}}</text>
       <rect class="slot" x="0" y="80"  width="70" height="70"/>
-      <use id="housing-icon-library" href="skills_sprite.svg#intelligence" x="15" y="95" width="40" height="40" />
+      <use id="housing-icon-library" href="/assets/sprites/skills_sprite.svg#intelligence" x="15" y="95" width="40" height="40" />
       <text class="skillLevel" id="housing-level-library" x="65" y="94">{{housing-library}}</text>
       <rect class="slot" x="0" y="160" width="70" height="70"/>
-      <use id="housing-icon-dojo" href="skills_sprite.svg#attack" x="15" y="175" width="40" height="40" />
+      <use id="housing-icon-dojo" href="/assets/sprites/skills_sprite.svg#attack" x="15" y="175" width="40" height="40" />
       <text class="skillLevel" id="housing-level-dojo" x="65" y="174">{{housing-dojo}}</text>
       <rect class="slot" x="0" y="240" width="70" height="70"/>
-      <use id="housing-icon-armory" href="skills_sprite.svg#defense" x="15" y="255" width="40" height="40" />
+      <use id="housing-icon-armory" href="/assets/sprites/skills_sprite.svg#defense" x="15" y="255" width="40" height="40" />
       <text class="skillLevel" id="housing-level-armory" x="65" y="254">{{housing-armory}}</text>
       <rect class="slot" x="0" y="320" width="70" height="70"/>
-      <use id="housing-icon-gym" href="skills_sprite.svg#melee" x="15" y="335" width="40" height="40" />
+      <use id="housing-icon-gym" href="/assets/sprites/skills_sprite.svg#melee" x="15" y="335" width="40" height="40" />
       <text class="skillLevel" id="housing-level-gym" x="65" y="334">{{housing-gym}}</text>
       <rect class="slot" x="0" y="400" width="70" height="70"/>
-      <use id="housing-icon-archery_range" href="skills_sprite.svg#ranged" x="15" y="415" width="40" height="40" />
+      <use id="housing-icon-archery_range" href="/assets/sprites/skills_sprite.svg#ranged" x="15" y="415" width="40" height="40" />
       <text class="skillLevel" id="housing-level-archery_range" x="65" y="414">{{housing-archery_range}}</text>
       <rect class="slot" x="0" y="480" width="70" height="70"/>
-      <use id="housing-icon-mystical_study" href="skills_sprite.svg#magic" x="15" y="495" width="40" height="40" />
+      <use id="housing-icon-mystical_study" href="/assets/sprites/skills_sprite.svg#magic" x="15" y="495" width="40" height="40" />
       <text class="skillLevel" id="housing-level-mystical_study" x="65" y="494">{{housing-mystical_study}}</text>
     </g>
   </g>
