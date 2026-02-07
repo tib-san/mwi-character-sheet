@@ -34,6 +34,23 @@
       "exclude": [
         { "type": "regex", "value": "^custom_" }
       ]
+    },
+    "consumables.food": {
+      "include": [
+        { "type": "static", "value": "donut" },
+        { "type": "regex", "value": ".*_donut" },
+        { "type": "static", "value": "cupcake" },
+        { "type": "regex", "value": ".*_cake$" },
+        { "type": "static", "value": "gummy" },
+        { "type": "regex", "value": ".*_gummy" },
+        { "type": "static", "value": "yogurt" },
+        { "type": "regex", "value": ".*_yogurt$" }
+      ]
+    },
+    "consumables.drink": {
+      "include": [
+        { "type": "regex", "value": ".*_coffee$" }
+      ]
     }
   },
   "slotRules": {

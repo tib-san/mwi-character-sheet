@@ -307,7 +307,7 @@
     "joinBy": "-",
     "split": {
       "delimiter": ";",
-      "keys": ["general","skills","equipment","abilities","food","housing","achievements"],
+      "keys": ["general","skills","equipment","abilities","consumables","housing","achievements"],
       "general": {
         "delimiter": ",",
         "keys": ["name","avatar","outfit","name_icon","name_color"],
@@ -354,11 +354,32 @@
         "7":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
         "8":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } }
       },
-      "food": {
+      "consumables": {
         "delimiter": ",",
         "keys": ["1","2","3","4","5","6"],
         "prefix": "./assets/sprites/items_sprite.svg#",
-        "default": ""
+        "default": "",
+        "editor": {
+          "type": "symbol",
+          "catalog": "./assets/sprites/items_sprite.svg",
+          "allowEmpty": true,
+          "fields": {
+            "1": { "rulesRef": "consumables.food" },
+            "2": { "rulesRef": "consumables.food" },
+            "3": { "rulesRef": "consumables.food" },
+            "4": { "rulesRef": "consumables.drink" },
+            "5": { "rulesRef": "consumables.drink" },
+            "6": { "rulesRef": "consumables.drink" }
+          },
+          "labels": {
+            "1": "Food Slot 1",
+            "2": "Food Slot 2",
+            "3": "Food Slot 3",
+            "4": "Coffee Slot 1",
+            "5": "Coffee Slot 2",
+            "6": "Coffee Slot 3"
+          }
+        }
       },
       "housing": {
         "delimiter": ",",
@@ -489,27 +510,27 @@
     </g>
   </g>
 
-  <!-- ===== Food ===== -->
-  <g transform="translate(380,0)">
+  <!-- ===== Consumables ===== -->
+  <g transform="translate(380,0)" id="panel-consumables">
     <rect class="panel" x="0" y="0" width="350" height="190" />
-    <text class="title" x="3" y="14">Food</text>
+    <text class="title" x="3" y="14">Consumables</text>
 
     <g transform="translate(55,20)">
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0" width="70" height="70"/><text class="slotNum" x="6"  y="14">1</text>
-      <use id="food-icon-1" href="{{food-1}}" x="15" y="15" width="40" height="40" />
+      <use id="consumables-icon-1" href="{{consumables-1}}" x="15" y="15" width="40" height="40" />
       <rect class="slot" x="80"  y="0" width="70" height="70"/><text class="slotNum" x="86" y="14">2</text>
-      <use id="food-icon-2" href="{{food-2}}" x="95" y="15" width="40" height="40" />
+      <use id="consumables-icon-2" href="{{consumables-2}}" x="95" y="15" width="40" height="40" />
       <rect class="slot" x="160" y="0" width="70" height="70"/><text class="slotNum" x="166" y="14">3</text>
-      <use id="food-icon-3" href="{{food-3}}" x="175" y="15" width="40" height="40" />
+      <use id="consumables-icon-3" href="{{consumables-3}}" x="175" y="15" width="40" height="40" />
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/><text class="slotNum" x="6"  y="94">4</text>
-      <use id="food-icon-4" href="{{food-4}}" x="15" y="95" width="40" height="40" />
+      <use id="consumables-icon-4" href="{{consumables-4}}" x="15" y="95" width="40" height="40" />
       <rect class="slot" x="80"  y="80" width="70" height="70"/><text class="slotNum" x="86" y="94">5</text>
-      <use id="food-icon-5" href="{{food-5}}" x="95" y="95" width="40" height="40" />
+      <use id="consumables-icon-5" href="{{consumables-5}}" x="95" y="95" width="40" height="40" />
       <rect class="slot" x="160" y="80" width="70" height="70"/><text class="slotNum" x="166" y="94">6</text>
-      <use id="food-icon-6" href="{{food-6}}" x="175" y="95" width="40" height="40" />
+      <use id="consumables-icon-6" href="{{consumables-6}}" x="175" y="95" width="40" height="40" />
     </g>
   </g>
 

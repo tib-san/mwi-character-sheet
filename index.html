@@ -187,6 +187,7 @@
     const EDITOR_PANELS = {
       character: ['general', 'achievements'],
       skills: ['skills'],
+      consumables: ['consumables'],
       housing: ['housing'],
     };
 
@@ -475,8 +476,8 @@
       return false;
     };
 
-    const resolveSymbolOptions = (section, key, rawOptions) => {
-      const ref = `${section}.${key}`;
+    const resolveSymbolOptions = (section, key, rawOptions, fieldEditor = {}) => {
+      const ref = fieldEditor?.rulesRef || `${section}.${key}`;
       const symbolRules = currentSlotRules?.symbolRules || {};
       const ruleSet = symbolRules[ref];
       if (!ruleSet || typeof ruleSet !== 'object') return rawOptions;
@@ -599,7 +600,13 @@
       const sections = EDITOR_PANELS[panelKey];
       if (!sections || !sections.length) return;
 
-      const panelLabel = panelKey === 'character' ? 'Character' : panelKey === 'skills' ? 'Skills' : 'Housing';
+      const panelLabelMap = {
+        character: 'Character',
+        skills: 'Skills',
+        consumables: 'Consumables',
+        housing: 'Housing',
+      };
+      const panelLabel = panelLabelMap[panelKey] || humanizeKey(panelKey);
       editTitleEl.textContent = `Edit ${panelLabel}`;
       editFieldsEl.innerHTML = '';
 
@@ -620,7 +627,8 @@
 
         for (const key of sectionMap.keys) {
           const fieldMap = sectionMap[key] || {};
-          const fieldEditor = fieldMap.editor || {};
+          const sectionFieldEditor = (sectionEditor.fields && sectionEditor.fields[key]) || {};
+          const fieldEditor = { ...sectionFieldEditor, ...(fieldMap.editor || {}) };
           if (hiddenKeys.has(key) || fieldEditor.hidden === true) continue;
 
           const controlType = fieldEditor.type || sectionEditor.type || 'number';
@@ -685,9 +693,9 @@
             const select = document.createElement('select');
             select.id = `edit-${section}-${key}`;
             select.name = key;
-            const catalog = fieldEditor.catalog || ((fieldMap.prefix || '').split('#')[0] || '');
-            const allowEmpty = fieldEditor.allowEmpty !== false;
-            const options = resolveSymbolOptions(section, key, await getSymbolOptions(catalog));
+            const catalog = fieldEditor.catalog || sectionEditor.catalog || ((fieldMap.prefix || sectionMap.prefix || '').split('#')[0] || '');
+            const allowEmpty = fieldEditor.allowEmpty !== undefined ? fieldEditor.allowEmpty : (sectionEditor.allowEmpty !== false);
+            const options = resolveSymbolOptions(section, key, await getSymbolOptions(catalog), fieldEditor);
             if (allowEmpty) {
               const noneOpt = document.createElement('option');
               noneOpt.value = '';
@@ -735,9 +743,11 @@
 
     const decorateInteractivePanels = (svgEl) => {
       const characterPanel = svgEl.querySelector('#panel-character');
+      const consumablesPanel = svgEl.querySelector('#panel-consumables');
       const skillsPanel = svgEl.querySelector('#panel-skills');
       const housingPanel = svgEl.querySelector('#panel-housing');
       if (characterPanel) characterPanel.style.cursor = 'pointer';
+      if (consumablesPanel) consumablesPanel.style.cursor = 'pointer';
       if (skillsPanel) skillsPanel.style.cursor = 'pointer';
       if (housingPanel) housingPanel.style.cursor = 'pointer';
     };
@@ -766,6 +776,10 @@
       }
       if (target.closest('#panel-skills')) {
         openEditor('skills');
+        return;
+      }
+      if (target.closest('#panel-consumables')) {
+        openEditor('consumables');
         return;
       }
       if (target.closest('#panel-housing')) {
