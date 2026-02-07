@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "date": "2026-02-07",
+      "summary": "Big editor update: you can now edit your character sheet directly in the app, with smarter item choices, cleaner organization, and smoother interactions."
+    },
+    {
+      "date": "2026-01-27",
+      "summary": "Small stability update to make sure the combat level is always shown correctly."
+    },
+    {
+      "date": "2026-01-25",
+      "summary": "Expanded profile customization and polished visuals, especially around character appearance details."
+    },
+    {
+      "date": "2026-01-22",
+      "summary": "Laid the foundation of the tool and improved rendering and copy/export reliability."
+    }
+  ]
+}

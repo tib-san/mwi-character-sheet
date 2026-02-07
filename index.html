@@ -163,6 +163,87 @@
       cursor: progress;
     }
 
+    #whats-new-anchor {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 30;
+    }
+
+    #whats-new-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      padding: 0;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    #whats-new-popover {
+      position: absolute;
+      top: 38px;
+      right: 0;
+      width: min(360px, calc(100vw - 28px));
+      max-height: min(70vh, 520px);
+      border: 1px solid #3a4a70;
+      border-radius: 8px;
+      background: #141d37;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #whats-new-popover[hidden] {
+      display: none;
+    }
+
+    .whats-new-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #3a4a70;
+    }
+
+    .whats-new-title {
+      margin: 0;
+      font-size: 14px;
+      color: #c7b5e3;
+    }
+
+    #whats-new-content {
+      padding: 10px 12px;
+      overflow: auto;
+    }
+
+    .whats-new-entry {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #2a3558;
+    }
+
+    .whats-new-entry:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .whats-new-date {
+      margin: 0 0 4px;
+      font-size: 12px;
+      color: #98a7e9;
+    }
+
+    .whats-new-summary {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #e7e7e7;
+    }
+
     @media (max-width: 1220px) {
       #workspace {
         flex-direction: column;
@@ -189,6 +270,16 @@
   </style>
 </head>
 <body>
+  <div id="whats-new-anchor">
+    <button id="whats-new-btn" class="copy-btn" type="button" aria-label="Show what is new" aria-expanded="false" aria-controls="whats-new-popover">i</button>
+    <section id="whats-new-popover" hidden>
+      <div class="whats-new-header">
+        <h2 class="whats-new-title">What&apos;s New</h2>
+      </div>
+      <div id="whats-new-content">Loading…</div>
+    </section>
+  </div>
+
   <div id="workspace">
     <div id="target">Loading…</div>
     <aside id="edit-panel" hidden>
@@ -210,6 +301,7 @@
     const svgUrl = './assets/images/loadout_combat.svg';
     const slotRulesUrl = './assets/data/slot-rules.json';
     const itemDataUrl = './assets/data/item-data.json';
+    const whatsNewUrl = './assets/data/whats-new.json';
     const symbolFileCache = new Map();
     const symbolOptionsCache = new Map();
     const imageDataCache = new Map();
@@ -219,11 +311,15 @@
     const editFieldsEl = document.getElementById('edit-fields');
     const editTitleEl = document.getElementById('edit-title');
     const editModeBtnEl = document.getElementById('edit-mode-btn');
+    const whatsNewBtnEl = document.getElementById('whats-new-btn');
+    const whatsNewPopoverEl = document.getElementById('whats-new-popover');
+    const whatsNewContentEl = document.getElementById('whats-new-content');
 
     let currentParsed = null;
     let currentRenderMap = null;
     let currentSlotRules = null;
     let currentItemData = null;
+    let currentWhatsNew = null;
     let currentSvgText = '';
     let currentEditSection = null;
     let isEditMode = false;
@@ -263,6 +359,17 @@
         return parsed && typeof parsed === 'object' ? parsed : {};
       } catch (e) {
         return {};
+      }
+    };
+
+    const fetchWhatsNew = async () => {
+      const res = await fetch(whatsNewUrl);
+      if (!res.ok) return { entries: [] };
+      try {
+        const parsed = await res.json();
+        return parsed && typeof parsed === 'object' ? parsed : { entries: [] };
+      } catch (e) {
+        return { entries: [] };
       }
     };
 
@@ -679,6 +786,50 @@
     };
 
     const humanizeKey = (key) => key.replaceAll('_', ' ');
+
+    const formatShortDate = (value) => {
+      const txt = String(value ?? '').trim();
+      if (!txt) return '';
+      const date = new Date(`${txt}T12:00:00Z`);
+      if (Number.isNaN(date.getTime())) return txt;
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).format(date);
+    };
+
+    const renderWhatsNew = (payload) => {
+      if (!whatsNewContentEl) return;
+      const entries = Array.isArray(payload?.entries) ? payload.entries : [];
+      whatsNewContentEl.innerHTML = '';
+      if (!entries.length) {
+        const empty = document.createElement('p');
+        empty.className = 'whats-new-summary';
+        empty.textContent = 'No updates available yet.';
+        whatsNewContentEl.appendChild(empty);
+        return;
+      }
+
+      entries.forEach((entry) => {
+        const dateText = formatShortDate(entry?.date);
+        const summaryText = String(entry?.summary ?? '').trim();
+        if (!dateText && !summaryText) return;
+
+        const row = document.createElement('article');
+        row.className = 'whats-new-entry';
+        const date = document.createElement('h3');
+        date.className = 'whats-new-date';
+        date.textContent = dateText || 'Update';
+        const summary = document.createElement('p');
+        summary.className = 'whats-new-summary';
+        summary.textContent = summaryText || 'Update details coming soon.';
+        row.appendChild(date);
+        row.appendChild(summary);
+        whatsNewContentEl.appendChild(row);
+      });
+    };
 
     const getSectionValue = (section, key) => {
       const sectionState = currentParsed?.[section];
@@ -1132,6 +1283,12 @@
       editPanelEl.hidden = true;
     };
 
+    const setWhatsNewOpen = (nextOpen) => {
+      const open = Boolean(nextOpen);
+      whatsNewPopoverEl.hidden = !open;
+      whatsNewBtnEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
     const setEditMode = (next) => {
       isEditMode = Boolean(next);
       editModeBtnEl.textContent = isEditMode ? 'Exit edit mode' : 'Edit mode';
@@ -1207,10 +1364,12 @@
       try {
         const urpt = getRawQueryParam('urpt');
 
-        const [svgText, slotRules, itemData] = await Promise.all([fetchSvg(), fetchSlotRules(), fetchItemData()]);
+        const [svgText, slotRules, itemData, whatsNew] = await Promise.all([fetchSvg(), fetchSlotRules(), fetchItemData(), fetchWhatsNew()]);
         currentSvgText = svgText;
         currentSlotRules = slotRules;
         currentItemData = itemData;
+        currentWhatsNew = whatsNew;
+        renderWhatsNew(currentWhatsNew);
         itemMetaCache.clear();
         currentRenderMap = readRenderMap(currentSvgText);
         if (!currentRenderMap || !currentRenderMap.split) {
@@ -1231,7 +1390,21 @@
     document.getElementById('copy-lnk-btn').addEventListener('click', copyLink);
     document.getElementById('edit-close-btn').addEventListener('click', closeEditor);
     editModeBtnEl.addEventListener('click', () => setEditMode(!isEditMode));
+    whatsNewBtnEl.addEventListener('click', () => setWhatsNewOpen(whatsNewPopoverEl.hidden));
     targetEl.addEventListener('click', onSheetClick);
+    document.addEventListener('click', (evt) => {
+      if (whatsNewPopoverEl.hidden) return;
+      const target = evt.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest('#whats-new-anchor')) {
+        setWhatsNewOpen(false);
+      }
+    });
+    document.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape' && !whatsNewPopoverEl.hidden) {
+        setWhatsNewOpen(false);
+      }
+    });
     main();
 
     async function inlineExternalAssets(svgEl) {
