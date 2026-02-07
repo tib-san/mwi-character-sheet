@@ -109,6 +109,25 @@
       font-size: 14px;
     }
 
+    .field input[type='checkbox'] {
+      width: auto;
+      padding: 0;
+      border: none;
+      background: transparent;
+      accent-color: #98a7e9;
+    }
+
+    .field-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #e7e7e7;
+      cursor: pointer;
+      user-select: none;
+      text-transform: none;
+    }
+
     .field-inline-controls {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 88px;
@@ -998,7 +1017,9 @@
           label.setAttribute('for', `edit-${section}-${key}`);
           label.textContent = sectionEditor?.labels?.[key] || humanizeKey(key);
 
-          wrapper.appendChild(label);
+          if (controlType !== 'boolean') {
+            wrapper.appendChild(label);
+          }
 
           if (controlType === 'number') {
             const numericEditor = { ...sectionEditor, ...fieldEditor };
@@ -1073,6 +1094,9 @@
             });
             wrapper.appendChild(select);
           } else if (controlType === 'boolean') {
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.className = 'field-checkbox';
+            checkboxLabel.setAttribute('for', `edit-${section}-${key}`);
             const input = document.createElement('input');
             input.id = `edit-${section}-${key}`;
             input.name = key;
@@ -1081,7 +1105,11 @@
             input.addEventListener('change', async () => {
               await applyNonNumericEdit(section, key, input.checked ? '1' : '0');
             });
-            wrapper.appendChild(input);
+            const text = document.createElement('span');
+            text.textContent = label.textContent;
+            checkboxLabel.appendChild(input);
+            checkboxLabel.appendChild(text);
+            wrapper.appendChild(checkboxLabel);
           }
 
           editFieldsEl.appendChild(wrapper);
