@@ -37,35 +37,25 @@
     },
     "consumables.food": {
       "include": [
-        { "type": "static", "value": "donut" },
-        { "type": "regex", "value": ".*_donut" },
-        { "type": "static", "value": "cupcake" },
-        { "type": "regex", "value": ".*_cake$" },
-        { "type": "static", "value": "gummy" },
-        { "type": "regex", "value": ".*_gummy" },
-        { "type": "static", "value": "yogurt" },
-        { "type": "regex", "value": ".*_yogurt$" }
+        { "type": "itemCategory", "value": "/item_categories/food" }
       ]
     },
     "consumables.drink": {
       "include": [
-        { "type": "regex", "value": ".*_coffee$" }
+        { "type": "itemCategory", "value": "/item_categories/drink" }
       ]
     },
     "abilities.normal": {
+      "include": [
+        { "type": "itemCategory", "value": "/item_categories/ability_book" }
+      ],
       "exclude": [
-        { "type": "static", "value": "revive" },
-        { "type": "static", "value": "insanity" },
-        { "type": "static", "value": "invincible" },
-        { "type": "regex", "value": ".*_aura$" }
+        { "type": "itemPathRegex", "path": "abilityBookDetail.abilityHrid", "value": "^/abilities/(.*_aura|revive|insanity|invincible)$" }
       ]
     },
     "abilities.special": {
       "include": [
-        { "type": "static", "value": "revive" },
-        { "type": "static", "value": "insanity" },
-        { "type": "static", "value": "invincible" },
-        { "type": "regex", "value": ".*_aura$" }
+        { "type": "itemPathRegex", "path": "abilityBookDetail.abilityHrid", "value": "^/abilities/(.*_aura|revive|insanity|invincible)$" }
       ]
     },
     "equipment.back": {
@@ -139,8 +129,5 @@
         { "type": "equipmentType", "value": "/equipment_types/charm" }
       ]
     }
-  },
-  "slotRules": {
-    "equipment": {}
   }
 }
