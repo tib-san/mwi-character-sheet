@@ -1,0 +1,42 @@
+{
+  "enumOptions": {
+    "general.name_color": [
+      "",
+      "burble",
+      "blue",
+      "green",
+      "yellow",
+      "coral",
+      "pink",
+      "fancy_burble",
+      "fancy_blue",
+      "fancy_green",
+      "fancy_yellow",
+      "fancy_coral",
+      "fancy_pink",
+      "iron",
+      "rainbow",
+      "golden"
+    ]
+  },
+  "symbolRules": {
+    "general.avatar": {
+      "exclude": [
+        { "type": "regex", "value": "^custom_" }
+      ]
+    },
+    "general.outfit": {
+      "exclude": [
+        { "type": "regex", "value": "^custom_" }
+      ]
+    },
+    "general.name_icon": {
+      "exclude": [
+        { "type": "regex", "value": "^custom_" }
+      ]
+    }
+  },
+  "slotRules": {
+    "equipment": {}
+  }
+}

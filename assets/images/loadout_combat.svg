@@ -311,11 +311,11 @@
       "general": {
         "delimiter": ",",
         "keys": ["name","avatar","outfit","name_icon","name_color"],
-        "name": { "default": "Player" },
-        "avatar": { "prefix": "./assets/sprites/avatars_sprite.svg#", "default": "person_default" },
-        "outfit": { "prefix": "./assets/sprites/avatar_outfits_sprite.svg#", "default": "tshirt_default" },
-        "name_icon": { "prefix": "./assets/sprites/chat_icons_sprite.svg#", "default": "" },
-        "name_color": { "default": "" }
+        "name": { "default": "Player", "editor": { "type": "text", "maxLength": 24 } },
+        "avatar": { "prefix": "./assets/sprites/avatars_sprite.svg#", "default": "person_default", "editor": { "type": "symbol", "catalog": "./assets/sprites/avatars_sprite.svg", "allowEmpty": false } },
+        "outfit": { "prefix": "./assets/sprites/avatar_outfits_sprite.svg#", "default": "tshirt_default", "editor": { "type": "symbol", "catalog": "./assets/sprites/avatar_outfits_sprite.svg", "allowEmpty": false } },
+        "name_icon": { "prefix": "./assets/sprites/chat_icons_sprite.svg#", "default": "", "editor": { "type": "symbol", "catalog": "./assets/sprites/chat_icons_sprite.svg", "allowEmpty": true } },
+        "name_color": { "default": "", "editor": { "type": "enum", "optionsRef": "general.name_color" } }
       },
       "skills": {
         "delimiter": ",",
@@ -369,7 +369,8 @@
       "achievements": {
         "delimiter": "",
         "keys": ["beginner","novice","adept","veteral","elite","champion"],
-        "default": "0"
+        "default": "0",
+        "editor": { "type": "boolean", "labels": { "beginner": "Beginner", "novice": "Novice", "adept": "Adept", "veteral": "Veteral", "elite": "Elite", "champion": "Champion" } }
       }
     }
   }
@@ -378,7 +379,7 @@
 
 <g transform="translate(10,10)">
   <!-- ===== Overview ===== -->
-  <g transform="translate(0,0)">
+  <g transform="translate(0,0)" id="panel-character">
     <rect class="panel" x="0" y="0" width="370" height="230" />
     <text class="title" x="3" y="14">Character</text>
 

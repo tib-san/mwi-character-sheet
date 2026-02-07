@@ -56,6 +56,14 @@
       color: #c7b5e3;
     }
 
+    .section-title {
+      margin: 10px 0 8px;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      color: #98a7e9;
+      text-transform: uppercase;
+    }
+
     .field {
       display: grid;
       gap: 6px;
@@ -69,6 +77,17 @@
     }
 
     .field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #3a4a70;
+      background: #0f1630;
+      color: #e7e7e7;
+      font-size: 14px;
+    }
+
+    .field select {
       width: 100%;
       box-sizing: border-box;
       padding: 8px 10px;
@@ -149,7 +168,9 @@
 
   <script type="module">
     const svgUrl = './assets/images/loadout_combat.svg';
+    const slotRulesUrl = './assets/data/slot-rules.json';
     const symbolFileCache = new Map();
+    const symbolOptionsCache = new Map();
     const imageDataCache = new Map();
 
     const targetEl = document.getElementById('target');
@@ -159,13 +180,31 @@
 
     let currentParsed = null;
     let currentRenderMap = null;
+    let currentSlotRules = null;
     let currentSvgText = '';
     let currentEditSection = null;
+
+    const EDITOR_PANELS = {
+      character: ['general', 'achievements'],
+      skills: ['skills'],
+      housing: ['housing'],
+    };
 
     const fetchSvg = async () => {
       const res = await fetch(svgUrl);
       if (!res.ok) throw new Error('Failed to fetch SVG');
       return res.text();
+    };
+
+    const fetchSlotRules = async () => {
+      const res = await fetch(slotRulesUrl);
+      if (!res.ok) return { enumOptions: {}, symbolRules: {}, slotRules: {} };
+      try {
+        const parsed = await res.json();
+        return parsed && typeof parsed === 'object' ? parsed : { enumOptions: {}, symbolRules: {}, slotRules: {} };
+      } catch (e) {
+        return { enumOptions: {}, symbolRules: {}, slotRules: {} };
+      }
     };
 
     const readRenderMap = (svgText) => {
@@ -409,6 +448,52 @@
       };
     };
 
+    const resolveEnumOptions = (section, key, fieldEditor) => {
+      if (Array.isArray(fieldEditor?.options)) return fieldEditor.options;
+      const ref = fieldEditor?.optionsRef || `${section}.${key}`;
+      const enumOptions = currentSlotRules?.enumOptions || {};
+      const options = enumOptions[ref];
+      if (Array.isArray(options)) return options;
+      return [];
+    };
+
+    const matchesSymbolRule = (symbolId, rule) => {
+      if (!rule || typeof rule !== 'object') return false;
+      const type = rule.type || 'static';
+      const value = String(rule.value ?? '');
+      if (!value) return false;
+
+      if (type === 'static') return symbolId === value;
+      if (type === 'prefix') return symbolId.startsWith(value);
+      if (type === 'regex') {
+        try {
+          return new RegExp(value).test(symbolId);
+        } catch (e) {
+          return false;
+        }
+      }
+      return false;
+    };
+
+    const resolveSymbolOptions = (section, key, rawOptions) => {
+      const ref = `${section}.${key}`;
+      const symbolRules = currentSlotRules?.symbolRules || {};
+      const ruleSet = symbolRules[ref];
+      if (!ruleSet || typeof ruleSet !== 'object') return rawOptions;
+
+      let options = Array.isArray(rawOptions) ? [...rawOptions] : [];
+      const include = Array.isArray(ruleSet.include) ? ruleSet.include : [];
+      const exclude = Array.isArray(ruleSet.exclude) ? ruleSet.exclude : [];
+
+      if (include.length) {
+        options = options.filter((symbolId) => include.some((rule) => matchesSymbolRule(symbolId, rule)));
+      }
+      if (exclude.length) {
+        options = options.filter((symbolId) => !exclude.some((rule) => matchesSymbolRule(symbolId, rule)));
+      }
+      return options;
+    };
+
     const normalizeNumericValue = (rawValue, min, max) => {
       const txt = String(rawValue ?? '').trim();
       if (txt === '') return '';
@@ -418,6 +503,16 @@
       if (min !== null) value = Math.max(min, value);
       if (max !== null) value = Math.min(max, value);
       return String(value);
+    };
+
+    const humanizeKey = (key) => key.replaceAll('_', ' ');
+
+    const setSectionValue = (section, key, value) => {
+      if (!currentParsed) return;
+      if (!currentParsed[section] || typeof currentParsed[section] !== 'object') {
+        currentParsed[section] = {};
+      }
+      currentParsed[section][key] = value;
     };
 
     const updateRenderedSectionValues = (section) => {
@@ -442,16 +537,36 @@
       }
     };
 
+    const getSymbolOptions = async (catalogPath) => {
+      if (!catalogPath) return [];
+      if (symbolOptionsCache.has(catalogPath)) return symbolOptionsCache.get(catalogPath);
+
+      let text = symbolFileCache.get(catalogPath);
+      if (!text) {
+        const res = await fetch(catalogPath);
+        if (!res.ok) {
+          symbolOptionsCache.set(catalogPath, []);
+          return [];
+        }
+        text = await res.text();
+        symbolFileCache.set(catalogPath, text);
+      }
+
+      const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+      const ids = Array.from(doc.querySelectorAll('symbol[id]'))
+        .map((el) => el.getAttribute('id'))
+        .filter((id) => Boolean(id));
+      symbolOptionsCache.set(catalogPath, ids);
+      return ids;
+    };
+
     const handleNumericEdit = (section, key, rawValue, inputEl) => {
       if (!currentParsed) return;
       if (section === 'skills' && key === 'combat') return;
-      if (!currentParsed[section] || typeof currentParsed[section] !== 'object') {
-        currentParsed[section] = {};
-      }
 
       const bounds = getFieldBounds(section, key);
       const normalized = normalizeNumericValue(rawValue, bounds.min, bounds.max);
-      currentParsed[section][key] = normalized;
+      setSectionValue(section, key, normalized);
 
       if (section === 'skills' && key !== 'combat') {
         applyComputedCombat(currentParsed);
@@ -469,51 +584,148 @@
       updateUrlFromState();
     };
 
-    const renderEditorFields = (section) => {
-      if (!currentRenderMap?.split?.[section] || !currentParsed) return;
-      const sectionMap = currentRenderMap.split[section];
-      const sectionLabel = section === 'skills' ? 'Skills' : 'Housing';
-
-      editTitleEl.textContent = `Edit ${sectionLabel}`;
-      editFieldsEl.innerHTML = '';
-
-      const state = currentParsed[section] || {};
-      const hiddenKeys = new Set(Array.isArray(sectionMap?.editor?.hiddenKeys) ? sectionMap.editor.hiddenKeys : []);
-      sectionMap.keys.forEach((key) => {
-        const fieldEditor = sectionMap?.editor?.fields?.[key] || {};
-        if (hiddenKeys.has(key) || fieldEditor.hidden === true) return;
-
-        const bounds = getFieldBounds(section, key);
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'field';
-
-        const label = document.createElement('label');
-        label.setAttribute('for', `edit-${section}-${key}`);
-        label.textContent = key.replaceAll('_', ' ');
-
-        const input = document.createElement('input');
-        input.id = `edit-${section}-${key}`;
-        input.name = key;
-        input.type = 'number';
-        input.step = '1';
-        if (bounds.min !== null) input.min = String(bounds.min);
-        if (bounds.max !== null) input.max = String(bounds.max);
-        input.value = state[key] ?? '';
-
-        input.addEventListener('change', () => {
-          handleNumericEdit(section, key, input.value, input);
-        });
-
-        wrapper.append(label, input);
-        editFieldsEl.appendChild(wrapper);
-      });
+    const applyNonNumericEdit = async (section, key, value) => {
+      if (!currentParsed) return;
+      setSectionValue(section, key, value);
+      if (section === 'skills' && key !== 'combat') {
+        applyComputedCombat(currentParsed);
+      }
+      await renderSheet();
+      updateUrlFromState();
     };
 
-    const openEditor = (section) => {
-      if (section !== 'skills' && section !== 'housing') return;
-      currentEditSection = section;
-      renderEditorFields(section);
+    const renderEditorFields = async (panelKey) => {
+      if (!currentRenderMap?.split || !currentParsed) return;
+      const sections = EDITOR_PANELS[panelKey];
+      if (!sections || !sections.length) return;
+
+      const panelLabel = panelKey === 'character' ? 'Character' : panelKey === 'skills' ? 'Skills' : 'Housing';
+      editTitleEl.textContent = `Edit ${panelLabel}`;
+      editFieldsEl.innerHTML = '';
+
+      for (const section of sections) {
+        const sectionMap = currentRenderMap.split[section];
+        if (!sectionMap || !Array.isArray(sectionMap.keys)) continue;
+
+        const state = currentParsed[section] || {};
+        const sectionEditor = sectionMap.editor || {};
+        const hiddenKeys = new Set(Array.isArray(sectionEditor.hiddenKeys) ? sectionEditor.hiddenKeys : []);
+
+        if (sections.length > 1) {
+          const sectionTitle = document.createElement('h3');
+          sectionTitle.className = 'section-title';
+          sectionTitle.textContent = section === 'general' ? 'General' : section === 'achievements' ? 'Achievements' : humanizeKey(section);
+          editFieldsEl.appendChild(sectionTitle);
+        }
+
+        for (const key of sectionMap.keys) {
+          const fieldMap = sectionMap[key] || {};
+          const fieldEditor = fieldMap.editor || {};
+          if (hiddenKeys.has(key) || fieldEditor.hidden === true) continue;
+
+          const controlType = fieldEditor.type || sectionEditor.type || 'number';
+          const bounds = getFieldBounds(section, key);
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'field';
+
+          const label = document.createElement('label');
+          label.setAttribute('for', `edit-${section}-${key}`);
+          label.textContent = sectionEditor?.labels?.[key] || humanizeKey(key);
+
+          wrapper.appendChild(label);
+
+          if (controlType === 'number') {
+            const input = document.createElement('input');
+            input.id = `edit-${section}-${key}`;
+            input.name = key;
+            input.type = 'number';
+            input.step = '1';
+            if (bounds.min !== null) input.min = String(bounds.min);
+            if (bounds.max !== null) input.max = String(bounds.max);
+            input.value = state[key] ?? '';
+            input.addEventListener('change', () => {
+              handleNumericEdit(section, key, input.value, input);
+            });
+            wrapper.appendChild(input);
+          } else if (controlType === 'text') {
+            const input = document.createElement('input');
+            input.id = `edit-${section}-${key}`;
+            input.name = key;
+            input.type = 'text';
+            input.value = state[key] ?? '';
+            if (fieldEditor.maxLength) input.maxLength = Number(fieldEditor.maxLength);
+            input.addEventListener('change', async () => {
+              const maxLength = fieldEditor.maxLength ? Number(fieldEditor.maxLength) : null;
+              const next = maxLength ? input.value.slice(0, maxLength) : input.value;
+              input.value = next;
+              await applyNonNumericEdit(section, key, next);
+            });
+            wrapper.appendChild(input);
+          } else if (controlType === 'enum') {
+            const select = document.createElement('select');
+            select.id = `edit-${section}-${key}`;
+            select.name = key;
+            const options = resolveEnumOptions(section, key, fieldEditor);
+            const enumOptions = options.length ? [...options] : [''];
+            const currentValue = state[key] ?? '';
+            if (!enumOptions.includes(currentValue)) enumOptions.push(currentValue);
+            enumOptions.forEach((optValue) => {
+              const opt = document.createElement('option');
+              opt.value = optValue;
+              opt.textContent = optValue === '' ? '(None)' : optValue;
+              select.appendChild(opt);
+            });
+            select.value = state[key] ?? '';
+            select.addEventListener('change', async () => {
+              await applyNonNumericEdit(section, key, select.value);
+            });
+            wrapper.appendChild(select);
+          } else if (controlType === 'symbol') {
+            const select = document.createElement('select');
+            select.id = `edit-${section}-${key}`;
+            select.name = key;
+            const catalog = fieldEditor.catalog || ((fieldMap.prefix || '').split('#')[0] || '');
+            const allowEmpty = fieldEditor.allowEmpty !== false;
+            const options = resolveSymbolOptions(section, key, await getSymbolOptions(catalog));
+            if (allowEmpty) {
+              const noneOpt = document.createElement('option');
+              noneOpt.value = '';
+              noneOpt.textContent = '(None)';
+              select.appendChild(noneOpt);
+            }
+            options.forEach((symbolId) => {
+              const opt = document.createElement('option');
+              opt.value = symbolId;
+              opt.textContent = symbolId;
+              select.appendChild(opt);
+            });
+            select.value = state[key] ?? '';
+            select.addEventListener('change', async () => {
+              await applyNonNumericEdit(section, key, select.value);
+            });
+            wrapper.appendChild(select);
+          } else if (controlType === 'boolean') {
+            const input = document.createElement('input');
+            input.id = `edit-${section}-${key}`;
+            input.name = key;
+            input.type = 'checkbox';
+            input.checked = String(state[key] ?? '0') === '1';
+            input.addEventListener('change', async () => {
+              await applyNonNumericEdit(section, key, input.checked ? '1' : '0');
+            });
+            wrapper.appendChild(input);
+          }
+
+          editFieldsEl.appendChild(wrapper);
+        }
+      }
+    };
+
+    const openEditor = async (panelKey) => {
+      if (!EDITOR_PANELS[panelKey]) return;
+      currentEditSection = panelKey;
+      await renderEditorFields(panelKey);
       editPanelEl.hidden = false;
     };
 
@@ -522,8 +734,10 @@
     };
 
     const decorateInteractivePanels = (svgEl) => {
+      const characterPanel = svgEl.querySelector('#panel-character');
       const skillsPanel = svgEl.querySelector('#panel-skills');
       const housingPanel = svgEl.querySelector('#panel-housing');
+      if (characterPanel) characterPanel.style.cursor = 'pointer';
       if (skillsPanel) skillsPanel.style.cursor = 'pointer';
       if (housingPanel) housingPanel.style.cursor = 'pointer';
     };
@@ -539,13 +753,17 @@
         decorateInteractivePanels(svgEl);
       }
       if (currentEditSection) {
-        renderEditorFields(currentEditSection);
+        await renderEditorFields(currentEditSection);
       }
     };
 
     const onSheetClick = (evt) => {
       const target = evt.target;
       if (!(target instanceof Element)) return;
+      if (target.closest('#panel-character')) {
+        openEditor('character');
+        return;
+      }
       if (target.closest('#panel-skills')) {
         openEditor('skills');
         return;
@@ -559,7 +777,9 @@
       try {
         const urpt = getRawQueryParam('urpt');
 
-        currentSvgText = await fetchSvg();
+        const [svgText, slotRules] = await Promise.all([fetchSvg(), fetchSlotRules()]);
+        currentSvgText = svgText;
+        currentSlotRules = slotRules;
         currentRenderMap = readRenderMap(currentSvgText);
         if (!currentRenderMap || !currentRenderMap.split) {
           throw new Error('Missing or invalid render-map');
