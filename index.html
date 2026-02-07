@@ -29,13 +29,16 @@
 
     #edit-panel {
       width: 300px;
-      min-height: 610px;
+      height: 610px;
+      max-height: 610px;
       box-sizing: border-box;
       border: 1px solid #3a4a70;
       border-radius: 8px;
       background: #141d37;
       padding: 12px;
-      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     #edit-panel[hidden] {
@@ -48,6 +51,14 @@
       justify-content: space-between;
       gap: 8px;
       margin-bottom: 10px;
+      flex: 0 0 auto;
+    }
+
+    #edit-fields {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .panel-title {
@@ -151,6 +162,8 @@
 
       #edit-panel {
         width: 100%;
+        height: auto;
+        max-height: none;
         min-height: 0;
       }
     }
@@ -169,6 +182,7 @@
   </div>
 
   <div id="button-row">
+    <button id="edit-mode-btn" class="copy-btn" type="button">Edit mode</button>
     <button id="copy-img-btn" class="copy-btn" type="button">Copy image</button>
     <button id="copy-lnk-btn" class="copy-btn" type="button">Copy link</button>
   </div>
@@ -185,6 +199,7 @@
     const editPanelEl = document.getElementById('edit-panel');
     const editFieldsEl = document.getElementById('edit-fields');
     const editTitleEl = document.getElementById('edit-title');
+    const editModeBtnEl = document.getElementById('edit-mode-btn');
 
     let currentParsed = null;
     let currentRenderMap = null;
@@ -192,6 +207,8 @@
     let currentItemData = null;
     let currentSvgText = '';
     let currentEditSection = null;
+    let isEditMode = false;
+    const itemMetaCache = new Map();
 
     const EDITOR_PANELS = {
       character: ['general', 'achievements'],
@@ -497,6 +514,71 @@
       return currentItemData[`/items/${symbolId}`] || null;
     };
 
+    const toTitleCase = (txt) => String(txt ?? '')
+      .replaceAll('_', ' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    const getRequiredProgressLevel = (itemData) => {
+      if (!itemData || typeof itemData !== 'object') return Number.MAX_SAFE_INTEGER;
+      const levels = [];
+      const walk = (node) => {
+        if (!node || typeof node !== 'object') return;
+        if (Array.isArray(node)) {
+          node.forEach((entry) => walk(entry));
+          return;
+        }
+        const reqs = node.levelRequirements;
+        if (Array.isArray(reqs)) {
+          reqs.forEach((req) => {
+            const lvl = Number(req?.level);
+            if (Number.isFinite(lvl)) levels.push(lvl);
+          });
+        }
+        Object.values(node).forEach((value) => {
+          if (value && typeof value === 'object') walk(value);
+        });
+      };
+      walk(itemData);
+      if (levels.length) return Math.min(...levels);
+      const itemLevel = Number(itemData?.itemLevel);
+      return Number.isFinite(itemLevel) ? itemLevel : Number.MAX_SAFE_INTEGER;
+    };
+
+    const getSymbolMeta = (symbolId) => {
+      const id = String(symbolId ?? '');
+      if (itemMetaCache.has(id)) return itemMetaCache.get(id);
+      const itemData = getItemDataForSymbol(id);
+      const meta = {
+        label: itemData?.name || toTitleCase(id),
+        requiredLevel: getRequiredProgressLevel(itemData),
+      };
+      itemMetaCache.set(id, meta);
+      return meta;
+    };
+
+    const getSortedSymbolEntries = (rawOptions) => {
+      const entries = (Array.isArray(rawOptions) ? rawOptions : []).map((symbolId) => {
+        const meta = getSymbolMeta(symbolId);
+        return {
+          symbolId,
+          label: meta.label,
+          requiredLevel: meta.requiredLevel,
+        };
+      });
+      entries.sort((a, b) => {
+        const levelA = Number.isFinite(a.requiredLevel) ? a.requiredLevel : Number.MAX_SAFE_INTEGER;
+        const levelB = Number.isFinite(b.requiredLevel) ? b.requiredLevel : Number.MAX_SAFE_INTEGER;
+        if (levelA !== levelB) return levelA - levelB;
+        const byLabel = a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+        if (byLabel !== 0) return byLabel;
+        return String(a.symbolId).localeCompare(String(b.symbolId), undefined, { sensitivity: 'base' });
+      });
+      return entries;
+    };
+
     const matchesSymbolRule = (symbolId, rule, itemData = null) => {
       if (!rule || typeof rule !== 'object') return false;
       const type = rule.type || 'static';
@@ -571,6 +653,12 @@
       return String(value);
     };
 
+    const normalizeEditorNumericValue = (value, fieldEditor = {}) => {
+      if (value === '' || value === null || value === undefined) return '';
+      if (fieldEditor?.emptyWhenZero === true && Number(value) === 0) return '';
+      return String(value);
+    };
+
     const humanizeKey = (key) => key.replaceAll('_', ' ');
 
     const getSectionValue = (section, key) => {
@@ -620,6 +708,12 @@
 
       const sectionMap = currentRenderMap.split[section];
       const sectionState = currentParsed?.[section] || {};
+      const withPrefix = (value, mapNode) => {
+        const prefix = mapNode?.prefix;
+        const hasValue = !(value === '' || value === null || value === undefined);
+        if (prefix && hasValue) return `${prefix}${value}`;
+        return hasValue ? value : '';
+      };
 
       if (section === 'skills') {
         sectionMap.keys.forEach((key, idx) => {
@@ -629,16 +723,22 @@
       }
 
       if (section === 'housing') {
+        const housingEditor = sectionMap?.editor || {};
         sectionMap.keys.forEach((key) => {
           const node = svgEl.querySelector(`#housing-level-${key}`);
-          if (node) node.textContent = sectionState[key] ?? '';
+          if (node) node.textContent = normalizeEditorNumericValue(sectionState[key], housingEditor);
         });
       }
 
       if (section === 'equipment') {
+        const equipmentLevelEditor = sectionMap?.editor?.level || {};
         sectionMap.keys.forEach((key) => {
           const node = svgEl.querySelector(`#equip-level-${key}`);
-          if (node) node.textContent = sectionState?.[key]?.level ?? '';
+          if (node) {
+            const rawLevelValue = sectionState?.[key]?.level ?? '';
+            const levelValue = normalizeEditorNumericValue(rawLevelValue, equipmentLevelEditor);
+            node.textContent = withPrefix(levelValue, sectionMap?.[key]?.level);
+          }
         });
       }
 
@@ -678,7 +778,10 @@
       if (section === 'skills' && key === 'combat') return;
 
       const bounds = resolveNumericBounds(section, key, fieldEditor);
-      const normalized = normalizeNumericValue(rawValue, bounds.min, bounds.max);
+      const normalized = normalizeEditorNumericValue(
+        normalizeNumericValue(rawValue, bounds.min, bounds.max),
+        fieldEditor,
+      );
       setSectionValue(section, key, normalized);
 
       if (section === 'skills' && key !== 'combat') {
@@ -772,10 +875,11 @@
               noneOpt.textContent = '(None)';
               itemSelect.appendChild(noneOpt);
             }
-            itemOptions.forEach((symbolId) => {
+            const itemEntries = getSortedSymbolEntries(itemOptions);
+            itemEntries.forEach(({ symbolId, label: optionLabel }) => {
               const opt = document.createElement('option');
               opt.value = symbolId;
-              opt.textContent = symbolId;
+              opt.textContent = optionLabel;
               itemSelect.appendChild(opt);
             });
             itemSelect.value = slotState.item ?? '';
@@ -795,7 +899,7 @@
             levelInput.placeholder = 'Level';
             if (levelBounds.min !== null) levelInput.min = String(levelBounds.min);
             if (levelBounds.max !== null) levelInput.max = String(levelBounds.max);
-            levelInput.value = slotState.level ?? '';
+            levelInput.value = normalizeEditorNumericValue(slotState.level, levelEditor);
             levelInput.addEventListener('change', () => {
               handleNumericEdit(section, `${key}.level`, levelInput.value, levelInput, levelEditor);
             });
@@ -841,10 +945,11 @@
               noneOpt.textContent = '(None)';
               itemSelect.appendChild(noneOpt);
             }
-            itemOptions.forEach((symbolId) => {
+            const itemEntries = getSortedSymbolEntries(itemOptions);
+            itemEntries.forEach(({ symbolId, label: optionLabel }) => {
               const opt = document.createElement('option');
               opt.value = symbolId;
-              opt.textContent = symbolId;
+              opt.textContent = optionLabel;
               itemSelect.appendChild(opt);
             });
             itemSelect.value = slotState.item ?? '';
@@ -864,7 +969,7 @@
             levelInput.placeholder = 'Level';
             if (levelBounds.min !== null) levelInput.min = String(levelBounds.min);
             if (levelBounds.max !== null) levelInput.max = String(levelBounds.max);
-            levelInput.value = slotState.level ?? '';
+            levelInput.value = normalizeEditorNumericValue(slotState.level, levelEditor);
             levelInput.addEventListener('change', () => {
               handleNumericEdit(section, `${key}.level`, levelInput.value, levelInput, levelEditor);
             });
@@ -896,6 +1001,7 @@
           wrapper.appendChild(label);
 
           if (controlType === 'number') {
+            const numericEditor = { ...sectionEditor, ...fieldEditor };
             const input = document.createElement('input');
             input.id = `edit-${section}-${key}`;
             input.name = key;
@@ -903,9 +1009,9 @@
             input.step = '1';
             if (bounds.min !== null) input.min = String(bounds.min);
             if (bounds.max !== null) input.max = String(bounds.max);
-            input.value = state[key] ?? '';
+            input.value = normalizeEditorNumericValue(state[key], numericEditor);
             input.addEventListener('change', () => {
-              handleNumericEdit(section, key, input.value, input);
+              handleNumericEdit(section, key, input.value, input, numericEditor);
             });
             wrapper.appendChild(input);
           } else if (controlType === 'text') {
@@ -954,10 +1060,11 @@
               noneOpt.textContent = '(None)';
               select.appendChild(noneOpt);
             }
-            options.forEach((symbolId) => {
+            const symbolEntries = getSortedSymbolEntries(options);
+            symbolEntries.forEach(({ symbolId, label: optionLabel }) => {
               const opt = document.createElement('option');
               opt.value = symbolId;
-              opt.textContent = symbolId;
+              opt.textContent = optionLabel;
               select.appendChild(opt);
             });
             select.value = state[key] ?? '';
@@ -993,6 +1100,17 @@
       editPanelEl.hidden = true;
     };
 
+    const setEditMode = (next) => {
+      isEditMode = Boolean(next);
+      editModeBtnEl.textContent = isEditMode ? 'Exit edit mode' : 'Edit mode';
+      if (!isEditMode) {
+        currentEditSection = null;
+        closeEditor();
+      }
+      const svgEl = document.querySelector('#target svg');
+      if (svgEl) decorateInteractivePanels(svgEl);
+    };
+
     const decorateInteractivePanels = (svgEl) => {
       const characterPanel = svgEl.querySelector('#panel-character');
       const equipmentPanel = svgEl.querySelector('#panel-equipment');
@@ -1000,12 +1118,13 @@
       const consumablesPanel = svgEl.querySelector('#panel-consumables');
       const skillsPanel = svgEl.querySelector('#panel-skills');
       const housingPanel = svgEl.querySelector('#panel-housing');
-      if (characterPanel) characterPanel.style.cursor = 'pointer';
-      if (equipmentPanel) equipmentPanel.style.cursor = 'pointer';
-      if (abilitiesPanel) abilitiesPanel.style.cursor = 'pointer';
-      if (consumablesPanel) consumablesPanel.style.cursor = 'pointer';
-      if (skillsPanel) skillsPanel.style.cursor = 'pointer';
-      if (housingPanel) housingPanel.style.cursor = 'pointer';
+      const cursor = isEditMode ? 'pointer' : '';
+      if (characterPanel) characterPanel.style.cursor = cursor;
+      if (equipmentPanel) equipmentPanel.style.cursor = cursor;
+      if (abilitiesPanel) abilitiesPanel.style.cursor = cursor;
+      if (consumablesPanel) consumablesPanel.style.cursor = cursor;
+      if (skillsPanel) skillsPanel.style.cursor = cursor;
+      if (housingPanel) housingPanel.style.cursor = cursor;
     };
 
     const renderSheet = async () => {
@@ -1024,6 +1143,7 @@
     };
 
     const onSheetClick = (evt) => {
+      if (!isEditMode) return;
       const target = evt.target;
       if (!(target instanceof Element)) return;
       if (target.closest('#panel-character')) {
@@ -1059,12 +1179,14 @@
         currentSvgText = svgText;
         currentSlotRules = slotRules;
         currentItemData = itemData;
+        itemMetaCache.clear();
         currentRenderMap = readRenderMap(currentSvgText);
         if (!currentRenderMap || !currentRenderMap.split) {
           throw new Error('Missing or invalid render-map');
         }
 
         currentParsed = parseByMap(urpt, currentRenderMap.split) || {};
+        applyEditorDefaults(currentParsed);
         applyComputedCombat(currentParsed);
         await renderSheet();
       } catch (err) {
@@ -1076,6 +1198,7 @@
     document.getElementById('copy-img-btn').addEventListener('click', copyImage);
     document.getElementById('copy-lnk-btn').addEventListener('click', copyLink);
     document.getElementById('edit-close-btn').addEventListener('click', closeEditor);
+    editModeBtnEl.addEventListener('click', () => setEditMode(!isEditMode));
     targetEl.addEventListener('click', onSheetClick);
     main();
 
@@ -1204,6 +1327,31 @@
       const boost = 0.5 * Math.max(attack, defense, melee, ranged, magic);
       const combatLevel = Math.round(base + boost);
       s.combat = combatLevel.toString();
+    }
+
+    function applyEditorDefaults(parsed) {
+      if (!parsed || typeof parsed !== 'object') return;
+
+      const housingMap = currentRenderMap?.split?.housing;
+      const housingState = parsed.housing;
+      const housingEditor = housingMap?.editor || {};
+      if (housingMap && housingState && typeof housingState === 'object' && housingEditor.emptyWhenZero === true) {
+        housingMap.keys.forEach((key) => {
+          housingState[key] = normalizeEditorNumericValue(housingState[key], housingEditor);
+        });
+      }
+
+      const equipmentMap = currentRenderMap?.split?.equipment;
+      const equipmentState = parsed.equipment;
+      if (!equipmentMap || !equipmentState || typeof equipmentState !== 'object') return;
+      const equipmentLevelEditor = equipmentMap?.editor?.level || {};
+      if (equipmentLevelEditor.emptyWhenZero !== true) return;
+
+      equipmentMap.keys.forEach((key) => {
+        const slotState = equipmentState[key];
+        if (!slotState || typeof slotState !== 'object') return;
+        slotState.level = normalizeEditorNumericValue(slotState.level, equipmentLevelEditor);
+      });
     }
   </script>
 </body>

@@ -329,7 +329,7 @@
         "default": "",
         "editor": {
           "item": { "type": "symbol", "catalog": "./assets/sprites/items_sprite.svg", "allowEmpty": true },
-          "level": { "type": "number", "min": 0, "max": 20 },
+          "level": { "type": "number", "min": 0, "max": 20, "emptyWhenZero": true },
           "labels": {
             "back": "Back",
             "head": "Head",
@@ -429,7 +429,7 @@
         "delimiter": ",",
         "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
         "default": "",
-        "editor": { "min": 0, "max": 8 }
+        "editor": { "min": 0, "max": 8, "emptyWhenZero": true }
       },
       "achievements": {
         "delimiter": "",
