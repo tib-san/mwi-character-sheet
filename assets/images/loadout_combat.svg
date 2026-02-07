@@ -327,20 +327,40 @@
         "delimiter": ",",
         "keys": ["back","head","trinket","main_hand","body","off_hand","hands","legs","pouch","shoes","necklace","earrings","ring","charm"],
         "default": "",
-        "back":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "head":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "trinket":   { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "main_hand": { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "body":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "off_hand":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "hands":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "legs":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "pouch":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "shoes":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "necklace":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "earrings":  { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "ring":      { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } },
-        "charm":     { "delimiter": ".", "keys": ["item","enchantment"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "enchantment": { "prefix": "+", "default": "" } }
+        "editor": {
+          "item": { "type": "symbol", "catalog": "./assets/sprites/items_sprite.svg", "allowEmpty": true },
+          "level": { "type": "number", "min": 0, "max": 20 },
+          "labels": {
+            "back": "Back",
+            "head": "Head",
+            "trinket": "Trinket",
+            "main_hand": "Main Hand",
+            "body": "Body",
+            "off_hand": "Off Hand",
+            "hands": "Hands",
+            "legs": "Legs",
+            "pouch": "Pouch",
+            "shoes": "Shoes",
+            "necklace": "Necklace",
+            "earrings": "Earrings",
+            "ring": "Ring",
+            "charm": "Charm"
+          }
+        },
+        "back":      { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "head":      { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "trinket":   { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "main_hand": { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "body":      { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "off_hand":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "hands":     { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "legs":      { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "pouch":     { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "shoes":     { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "necklace":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "earrings":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "ring":      { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } },
+        "charm":     { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/items_sprite.svg#", "default": "" }, "level": { "prefix": "+", "default": "" } }
       },
       "abilities": {
         "delimiter": ",",
@@ -477,7 +497,7 @@
   </g>
 
   <!-- ===== Equipment ===== -->
-  <g transform="translate(0,240)">
+  <g transform="translate(0,240)" id="panel-equipment">
     <rect class="panel" x="0" y="0" width="370" height="350" />
     <text class="title" x="3" y="14">Equipment</text>
 
@@ -485,52 +505,52 @@
       <!-- row 1 -->
       <rect class="slot" x="0"   y="0"  width="70" height="70"/>
       <use id="equip-icon-back" href="{{equipment-back-item}}" x="15" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-back" x="6" y="12">{{equipment-back-enchantment}}</text>
+      <text class="enchant" id="equip-level-back" x="6" y="12">{{equipment-back-level}}</text>
       <rect class="slot" x="80"  y="0"  width="70" height="70"/>
       <use id="equip-icon-head" href="{{equipment-head-item}}" x="95" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-head" x="86" y="12">{{equipment-head-enchantment}}</text>
+      <text class="enchant" id="equip-level-head" x="86" y="12">{{equipment-head-level}}</text>
       <rect class="slot" x="160" y="0"  width="70" height="70"/>
       <use id="equip-icon-trinket" href="{{equipment-trinket-item}}" x="175" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-trinket" x="166" y="12">{{equipment-trinket-enchantment}}</text>
+      <text class="enchant" id="equip-level-trinket" x="166" y="12">{{equipment-trinket-level}}</text>
       <rect class="slot" x="260" y="0"  width="70" height="70"/>
       <use id="equip-icon-necklace" href="{{equipment-necklace-item}}" x="275" y="15" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-necklace" x="266" y="12">{{equipment-necklace-enchantment}}</text>
+      <text class="enchant" id="equip-level-necklace" x="266" y="12">{{equipment-necklace-level}}</text>
 
       <!-- row 2 -->
       <rect class="slot" x="0"   y="80" width="70" height="70"/>
       <use id="equip-icon-main_hand" href="{{equipment-main_hand-item}}" x="15" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-main_hand" x="6" y="92">{{equipment-main_hand-enchantment}}</text>
+      <text class="enchant" id="equip-level-main_hand" x="6" y="92">{{equipment-main_hand-level}}</text>
       <rect class="slot" x="80"  y="80" width="70" height="70"/>
       <use id="equip-icon-body" href="{{equipment-body-item}}" x="95" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-body" x="86" y="92">{{equipment-body-enchantment}}</text>
+      <text class="enchant" id="equip-level-body" x="86" y="92">{{equipment-body-level}}</text>
       <rect class="slot" x="160" y="80" width="70" height="70"/>
       <use id="equip-icon-off_hand" href="{{equipment-off_hand-item}}" x="175" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-off_hand" x="166" y="92">{{equipment-off_hand-enchantment}}</text>
+      <text class="enchant" id="equip-level-off_hand" x="166" y="92">{{equipment-off_hand-level}}</text>
       <rect class="slot" x="260" y="80" width="70" height="70"/>
       <use id="equip-icon-earrings" href="{{equipment-earrings-item}}" x="275" y="95" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-earrings" x="266" y="92">{{equipment-earrings-enchantment}}</text>
+      <text class="enchant" id="equip-level-earrings" x="266" y="92">{{equipment-earrings-level}}</text>
 
       <!-- row 3 -->
       <rect class="slot" x="0"   y="160" width="70" height="70"/>
       <use id="equip-icon-hands" href="{{equipment-hands-item}}" x="15" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-hands" x="6" y="172">{{equipment-hands-enchantment}}</text>
+      <text class="enchant" id="equip-level-hands" x="6" y="172">{{equipment-hands-level}}</text>
       <rect class="slot" x="80"  y="160" width="70" height="70"/>
       <use id="equip-icon-legs" href="{{equipment-legs-item}}" x="95" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-legs" x="86" y="172">{{equipment-legs-enchantment}}</text>
+      <text class="enchant" id="equip-level-legs" x="86" y="172">{{equipment-legs-level}}</text>
       <rect class="slot" x="160" y="160" width="70" height="70"/>
       <use id="equip-icon-pouch" href="{{equipment-pouch-item}}" x="175" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-pouch" x="166" y="172">{{equipment-pouch-enchantment}}</text>
+      <text class="enchant" id="equip-level-pouch" x="166" y="172">{{equipment-pouch-level}}</text>
       <rect class="slot" x="260" y="160" width="70" height="70"/>
       <use id="equip-icon-ring" href="{{equipment-ring-item}}" x="275" y="175" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-ring" x="266" y="172">{{equipment-ring-enchantment}}</text>
+      <text class="enchant" id="equip-level-ring" x="266" y="172">{{equipment-ring-level}}</text>
 
       <!-- row 4 -->
       <rect class="slot" x="80"  y="240" width="70" height="70"/>
       <use id="equip-icon-shoes" href="{{equipment-shoes-item}}" x="95" y="255" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-shoes" x="86" y="252">{{equipment-shoes-enchantment}}</text>
+      <text class="enchant" id="equip-level-shoes" x="86" y="252">{{equipment-shoes-level}}</text>
       <rect class="slot" x="260" y="240" width="70" height="70"/>
       <use id="equip-icon-charm" href="{{equipment-charm-item}}" x="275" y="255" width="40" height="40" />
-      <text class="enchant" id="equip-enchant-charm" x="266" y="252">{{equipment-charm-enchantment}}</text>
+      <text class="enchant" id="equip-level-charm" x="266" y="252">{{equipment-charm-level}}</text>
     </g>
   </g>
 

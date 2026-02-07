@@ -176,6 +176,7 @@
   <script type="module">
     const svgUrl = './assets/images/loadout_combat.svg';
     const slotRulesUrl = './assets/data/slot-rules.json';
+    const itemDataUrl = './assets/data/item-data.json';
     const symbolFileCache = new Map();
     const symbolOptionsCache = new Map();
     const imageDataCache = new Map();
@@ -188,11 +189,13 @@
     let currentParsed = null;
     let currentRenderMap = null;
     let currentSlotRules = null;
+    let currentItemData = null;
     let currentSvgText = '';
     let currentEditSection = null;
 
     const EDITOR_PANELS = {
       character: ['general', 'achievements'],
+      equipment: ['equipment'],
       skills: ['skills'],
       abilities: ['abilities'],
       consumables: ['consumables'],
@@ -213,6 +216,17 @@
         return parsed && typeof parsed === 'object' ? parsed : { enumOptions: {}, symbolRules: {}, slotRules: {} };
       } catch (e) {
         return { enumOptions: {}, symbolRules: {}, slotRules: {} };
+      }
+    };
+
+    const fetchItemData = async () => {
+      const res = await fetch(itemDataUrl);
+      if (!res.ok) return {};
+      try {
+        const parsed = await res.json();
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch (e) {
+        return {};
       }
     };
 
@@ -466,17 +480,54 @@
       return [];
     };
 
-    const matchesSymbolRule = (symbolId, rule) => {
+    const getByPath = (obj, path) => {
+      if (!obj || typeof obj !== 'object' || !path) return undefined;
+      const parts = String(path).split('.').filter(Boolean);
+      let node = obj;
+      for (const part of parts) {
+        if (node === null || typeof node !== 'object') return undefined;
+        node = node[part];
+        if (node === undefined) return undefined;
+      }
+      return node;
+    };
+
+    const getItemDataForSymbol = (symbolId) => {
+      if (!currentItemData || typeof currentItemData !== 'object') return null;
+      return currentItemData[`/items/${symbolId}`] || null;
+    };
+
+    const matchesSymbolRule = (symbolId, rule, itemData = null) => {
       if (!rule || typeof rule !== 'object') return false;
       const type = rule.type || 'static';
       const value = String(rule.value ?? '');
-      if (!value) return false;
+      if (!value && !['itemPathEquals', 'itemPathRegex', 'item_path_equals', 'item_path_regex'].includes(type)) return false;
 
       if (type === 'static') return symbolId === value;
       if (type === 'prefix') return symbolId.startsWith(value);
       if (type === 'regex') {
         try {
           return new RegExp(value).test(symbolId);
+        } catch (e) {
+          return false;
+        }
+      }
+      if (type === 'itemCategory' || type === 'item_category') {
+        return String(itemData?.categoryHrid ?? '') === value;
+      }
+      if (type === 'equipmentType' || type === 'equipment_type') {
+        return String(itemData?.equipmentDetail?.type ?? '') === value;
+      }
+      if (type === 'itemPathEquals' || type === 'item_path_equals') {
+        const path = String(rule.path ?? '');
+        if (!path) return false;
+        return String(getByPath(itemData, path) ?? '') === value;
+      }
+      if (type === 'itemPathRegex' || type === 'item_path_regex') {
+        const path = String(rule.path ?? '');
+        if (!path || !value) return false;
+        try {
+          return new RegExp(value).test(String(getByPath(itemData, path) ?? ''));
         } catch (e) {
           return false;
         }
@@ -495,10 +546,16 @@
       const exclude = Array.isArray(ruleSet.exclude) ? ruleSet.exclude : [];
 
       if (include.length) {
-        options = options.filter((symbolId) => include.some((rule) => matchesSymbolRule(symbolId, rule)));
+        options = options.filter((symbolId) => {
+          const itemData = getItemDataForSymbol(symbolId);
+          return include.some((rule) => matchesSymbolRule(symbolId, rule, itemData));
+        });
       }
       if (exclude.length) {
-        options = options.filter((symbolId) => !exclude.some((rule) => matchesSymbolRule(symbolId, rule)));
+        options = options.filter((symbolId) => {
+          const itemData = getItemDataForSymbol(symbolId);
+          return !exclude.some((rule) => matchesSymbolRule(symbolId, rule, itemData));
+        });
       }
       return options;
     };
@@ -578,6 +635,13 @@
         });
       }
 
+      if (section === 'equipment') {
+        sectionMap.keys.forEach((key) => {
+          const node = svgEl.querySelector(`#equip-level-${key}`);
+          if (node) node.textContent = sectionState?.[key]?.level ?? '';
+        });
+      }
+
       if (section === 'abilities') {
         sectionMap.keys.forEach((key, idx) => {
           const node = svgEl.querySelector(`#ability-level-${idx + 1}`);
@@ -650,6 +714,7 @@
 
       const panelLabelMap = {
         character: 'Character',
+        equipment: 'Equipment',
         skills: 'Skills',
         abilities: 'Abilities',
         consumables: 'Consumables',
@@ -700,7 +765,76 @@
             itemSelect.name = `${key}.item`;
             const itemCatalog = itemEditor.catalog || ((itemMap.prefix || '').split('#')[0] || '');
             const itemAllowEmpty = itemEditor.allowEmpty !== false;
-            const itemOptions = resolveSymbolOptions(section, `${key}.item`, await getSymbolOptions(itemCatalog), itemEditor);
+            const itemOptions = resolveSymbolOptions(section, key, await getSymbolOptions(itemCatalog), itemEditor);
+            if (itemAllowEmpty) {
+              const noneOpt = document.createElement('option');
+              noneOpt.value = '';
+              noneOpt.textContent = '(None)';
+              itemSelect.appendChild(noneOpt);
+            }
+            itemOptions.forEach((symbolId) => {
+              const opt = document.createElement('option');
+              opt.value = symbolId;
+              opt.textContent = symbolId;
+              itemSelect.appendChild(opt);
+            });
+            itemSelect.value = slotState.item ?? '';
+            itemSelect.addEventListener('change', async () => {
+              await applyNonNumericEdit(section, `${key}.item`, itemSelect.value);
+            });
+            controlsRow.appendChild(itemSelect);
+
+            const levelMap = slotMap.level || {};
+            const levelEditor = { ...levelDefaults, ...slotFieldEditor, ...(levelMap.editor || {}) };
+            const levelBounds = resolveNumericBounds(section, `${key}.level`, levelEditor);
+            const levelInput = document.createElement('input');
+            levelInput.id = `edit-${section}-${key}-level`;
+            levelInput.name = `${key}.level`;
+            levelInput.type = 'number';
+            levelInput.step = '1';
+            levelInput.placeholder = 'Level';
+            if (levelBounds.min !== null) levelInput.min = String(levelBounds.min);
+            if (levelBounds.max !== null) levelInput.max = String(levelBounds.max);
+            levelInput.value = slotState.level ?? '';
+            levelInput.addEventListener('change', () => {
+              handleNumericEdit(section, `${key}.level`, levelInput.value, levelInput, levelEditor);
+            });
+            controlsRow.appendChild(levelInput);
+
+            wrapper.appendChild(controlsRow);
+            editFieldsEl.appendChild(wrapper);
+          }
+
+          continue;
+        }
+
+        if (section === 'equipment') {
+          const itemDefaults = sectionEditor.item || {};
+          const levelDefaults = sectionEditor.level || {};
+
+          for (const key of sectionMap.keys) {
+            const slotMap = sectionMap[key] || {};
+            const slotState = (state[key] && typeof state[key] === 'object') ? state[key] : {};
+            const slotLabel = sectionEditor?.labels?.[key] || humanizeKey(key);
+            const slotFieldEditor = (sectionEditor.fields && sectionEditor.fields[key]) || {};
+
+            const itemMap = slotMap.item || {};
+            const itemEditor = { ...itemDefaults, ...slotFieldEditor, ...(itemMap.editor || {}) };
+            const wrapper = document.createElement('div');
+            wrapper.className = 'field';
+            const label = document.createElement('label');
+            label.setAttribute('for', `edit-${section}-${key}-item`);
+            label.textContent = slotLabel;
+            wrapper.appendChild(label);
+
+            const controlsRow = document.createElement('div');
+            controlsRow.className = 'field-inline-controls';
+            const itemSelect = document.createElement('select');
+            itemSelect.id = `edit-${section}-${key}-item`;
+            itemSelect.name = `${key}.item`;
+            const itemCatalog = itemEditor.catalog || ((itemMap.prefix || '').split('#')[0] || '');
+            const itemAllowEmpty = itemEditor.allowEmpty !== false;
+            const itemOptions = resolveSymbolOptions(section, key, await getSymbolOptions(itemCatalog), itemEditor);
             if (itemAllowEmpty) {
               const noneOpt = document.createElement('option');
               noneOpt.value = '';
@@ -861,11 +995,13 @@
 
     const decorateInteractivePanels = (svgEl) => {
       const characterPanel = svgEl.querySelector('#panel-character');
+      const equipmentPanel = svgEl.querySelector('#panel-equipment');
       const abilitiesPanel = svgEl.querySelector('#panel-abilities');
       const consumablesPanel = svgEl.querySelector('#panel-consumables');
       const skillsPanel = svgEl.querySelector('#panel-skills');
       const housingPanel = svgEl.querySelector('#panel-housing');
       if (characterPanel) characterPanel.style.cursor = 'pointer';
+      if (equipmentPanel) equipmentPanel.style.cursor = 'pointer';
       if (abilitiesPanel) abilitiesPanel.style.cursor = 'pointer';
       if (consumablesPanel) consumablesPanel.style.cursor = 'pointer';
       if (skillsPanel) skillsPanel.style.cursor = 'pointer';
@@ -894,6 +1030,10 @@
         openEditor('character');
         return;
       }
+      if (target.closest('#panel-equipment')) {
+        openEditor('equipment');
+        return;
+      }
       if (target.closest('#panel-skills')) {
         openEditor('skills');
         return;
@@ -915,9 +1055,10 @@
       try {
         const urpt = getRawQueryParam('urpt');
 
-        const [svgText, slotRules] = await Promise.all([fetchSvg(), fetchSlotRules()]);
+        const [svgText, slotRules, itemData] = await Promise.all([fetchSvg(), fetchSlotRules(), fetchItemData()]);
         currentSvgText = svgText;
         currentSlotRules = slotRules;
+        currentItemData = itemData;
         currentRenderMap = readRenderMap(currentSvgText);
         if (!currentRenderMap || !currentRenderMap.split) {
           throw new Error('Missing or invalid render-map');

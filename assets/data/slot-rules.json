@@ -67,6 +67,77 @@
         { "type": "static", "value": "invincible" },
         { "type": "regex", "value": ".*_aura$" }
       ]
+    },
+    "equipment.back": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/back" }
+      ]
+    },
+    "equipment.head": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/head" }
+      ]
+    },
+    "equipment.trinket": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/trinket" }
+      ]
+    },
+    "equipment.main_hand": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/main_hand" },
+        { "type": "equipmentType", "value": "/equipment_types/two_hand" }
+      ]
+    },
+    "equipment.body": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/body" }
+      ]
+    },
+    "equipment.off_hand": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/off_hand" }
+      ]
+    },
+    "equipment.hands": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/hands" }
+      ]
+    },
+    "equipment.legs": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/legs" }
+      ]
+    },
+    "equipment.pouch": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/pouch" }
+      ]
+    },
+    "equipment.shoes": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/feet" }
+      ]
+    },
+    "equipment.necklace": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/neck" }
+      ]
+    },
+    "equipment.earrings": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/earrings" }
+      ]
+    },
+    "equipment.ring": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/ring" }
+      ]
+    },
+    "equipment.charm": {
+      "include": [
+        { "type": "equipmentType", "value": "/equipment_types/charm" }
+      ]
     }
   },
   "slotRules": {
