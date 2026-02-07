@@ -735,8 +735,12 @@
       };
 
       if (section === 'skills') {
+        const valueNodes = (sectionMap?.editor?.valueNodes && typeof sectionMap.editor.valueNodes === 'object')
+          ? sectionMap.editor.valueNodes
+          : {};
         sectionMap.keys.forEach((key, idx) => {
-          const node = svgEl.querySelector(`#skill-level-${idx + 1}`);
+          const nodeId = valueNodes[key] || `skill-level-${idx + 1}`;
+          const node = svgEl.querySelector(`#${nodeId}`);
           if (node) node.textContent = sectionState[key] ?? '';
         });
       }

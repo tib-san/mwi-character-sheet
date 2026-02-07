@@ -321,7 +321,22 @@
         "delimiter": ",",
         "keys": ["combat","stamina","intelligence","attack","defense","melee","ranged","magic"],
         "default": "",
-        "editor": { "min": 1, "max": 200, "formula": "combat = round(0.1*(stamina+intelligence+attack+defense+max(melee,ranged,magic)) + 0.5*max(attack,defense,melee,ranged,magic))", "hiddenKeys": ["combat"] }
+        "editor": {
+          "min": 1,
+          "max": 200,
+          "formula": "combat = round(0.1*(stamina+intelligence+attack+defense+max(melee,ranged,magic)) + 0.5*max(attack,defense,melee,ranged,magic))",
+          "hiddenKeys": ["combat"],
+          "valueNodes": {
+            "combat": "skill-level-1",
+            "melee": "skill-level-2",
+            "ranged": "skill-level-3",
+            "magic": "skill-level-4",
+            "stamina": "skill-level-5",
+            "intelligence": "skill-level-6",
+            "attack": "skill-level-7",
+            "defense": "skill-level-8"
+          }
+        }
       },
       "equipment": {
         "delimiter": ",",
