@@ -51,6 +51,22 @@
       "include": [
         { "type": "regex", "value": ".*_coffee$" }
       ]
+    },
+    "abilities.normal": {
+      "exclude": [
+        { "type": "static", "value": "revive" },
+        { "type": "static", "value": "insanity" },
+        { "type": "static", "value": "invincible" },
+        { "type": "regex", "value": ".*_aura$" }
+      ]
+    },
+    "abilities.special": {
+      "include": [
+        { "type": "static", "value": "revive" },
+        { "type": "static", "value": "insanity" },
+        { "type": "static", "value": "invincible" },
+        { "type": "regex", "value": ".*_aura$" }
+      ]
     }
   },
   "slotRules": {

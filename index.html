@@ -98,6 +98,13 @@
       font-size: 14px;
     }
 
+    .field-inline-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 88px;
+      gap: 8px;
+      align-items: center;
+    }
+
     .copy-btn {
       display: inline-flex;
       justify-content: center;
@@ -187,6 +194,7 @@
     const EDITOR_PANELS = {
       character: ['general', 'achievements'],
       skills: ['skills'],
+      abilities: ['abilities'],
       consumables: ['consumables'],
       housing: ['housing'],
     };
@@ -508,12 +516,45 @@
 
     const humanizeKey = (key) => key.replaceAll('_', ' ');
 
+    const getSectionValue = (section, key) => {
+      const sectionState = currentParsed?.[section];
+      if (!sectionState || typeof sectionState !== 'object') return '';
+      const path = String(key ?? '').split('.').filter(Boolean);
+      if (!path.length) return '';
+      let node = sectionState;
+      for (const part of path) {
+        if (node === null || typeof node !== 'object') return '';
+        node = node[part];
+        if (node === undefined) return '';
+      }
+      return node;
+    };
+
     const setSectionValue = (section, key, value) => {
       if (!currentParsed) return;
       if (!currentParsed[section] || typeof currentParsed[section] !== 'object') {
         currentParsed[section] = {};
       }
-      currentParsed[section][key] = value;
+      const path = String(key ?? '').split('.').filter(Boolean);
+      if (!path.length) return;
+      let node = currentParsed[section];
+      for (let idx = 0; idx < path.length - 1; idx += 1) {
+        const part = path[idx];
+        if (!node[part] || typeof node[part] !== 'object') node[part] = {};
+        node = node[part];
+      }
+      node[path[path.length - 1]] = value;
+    };
+
+    const resolveNumericBounds = (section, key, fieldEditor = {}) => {
+      const rootKey = String(key ?? '').split('.')[0];
+      const base = getFieldBounds(section, rootKey);
+      const fieldMin = Number.isFinite(Number(fieldEditor?.min)) ? Number(fieldEditor.min) : null;
+      const fieldMax = Number.isFinite(Number(fieldEditor?.max)) ? Number(fieldEditor.max) : null;
+      return {
+        min: fieldMin !== null ? fieldMin : base.min,
+        max: fieldMax !== null ? fieldMax : base.max,
+      };
     };
 
     const updateRenderedSectionValues = (section) => {
@@ -534,6 +575,13 @@
         sectionMap.keys.forEach((key) => {
           const node = svgEl.querySelector(`#housing-level-${key}`);
           if (node) node.textContent = sectionState[key] ?? '';
+        });
+      }
+
+      if (section === 'abilities') {
+        sectionMap.keys.forEach((key, idx) => {
+          const node = svgEl.querySelector(`#ability-level-${idx + 1}`);
+          if (node) node.textContent = sectionState?.[key]?.level ?? '';
         });
       }
     };
@@ -561,11 +609,11 @@
       return ids;
     };
 
-    const handleNumericEdit = (section, key, rawValue, inputEl) => {
+    const handleNumericEdit = (section, key, rawValue, inputEl, fieldEditor = {}) => {
       if (!currentParsed) return;
       if (section === 'skills' && key === 'combat') return;
 
-      const bounds = getFieldBounds(section, key);
+      const bounds = resolveNumericBounds(section, key, fieldEditor);
       const normalized = normalizeNumericValue(rawValue, bounds.min, bounds.max);
       setSectionValue(section, key, normalized);
 
@@ -574,7 +622,7 @@
       }
 
       if (inputEl) {
-        inputEl.value = currentParsed[section][key] ?? '';
+        inputEl.value = getSectionValue(section, key) ?? '';
       }
 
       updateRenderedSectionValues(section);
@@ -603,6 +651,7 @@
       const panelLabelMap = {
         character: 'Character',
         skills: 'Skills',
+        abilities: 'Abilities',
         consumables: 'Consumables',
         housing: 'Housing',
       };
@@ -623,6 +672,75 @@
           sectionTitle.className = 'section-title';
           sectionTitle.textContent = section === 'general' ? 'General' : section === 'achievements' ? 'Achievements' : humanizeKey(section);
           editFieldsEl.appendChild(sectionTitle);
+        }
+
+        if (section === 'abilities') {
+          const itemDefaults = sectionEditor.item || {};
+          const levelDefaults = sectionEditor.level || {};
+
+          for (const key of sectionMap.keys) {
+            const slotMap = sectionMap[key] || {};
+            const slotState = (state[key] && typeof state[key] === 'object') ? state[key] : {};
+            const slotLabel = sectionEditor?.labels?.[key] || `Ability ${key}`;
+            const slotFieldEditor = (sectionEditor.fields && sectionEditor.fields[key]) || {};
+
+            const itemMap = slotMap.item || {};
+            const itemEditor = { ...itemDefaults, ...slotFieldEditor, ...(itemMap.editor || {}) };
+            const wrapper = document.createElement('div');
+            wrapper.className = 'field';
+            const label = document.createElement('label');
+            label.setAttribute('for', `edit-${section}-${key}-item`);
+            label.textContent = slotLabel;
+            wrapper.appendChild(label);
+
+            const controlsRow = document.createElement('div');
+            controlsRow.className = 'field-inline-controls';
+            const itemSelect = document.createElement('select');
+            itemSelect.id = `edit-${section}-${key}-item`;
+            itemSelect.name = `${key}.item`;
+            const itemCatalog = itemEditor.catalog || ((itemMap.prefix || '').split('#')[0] || '');
+            const itemAllowEmpty = itemEditor.allowEmpty !== false;
+            const itemOptions = resolveSymbolOptions(section, `${key}.item`, await getSymbolOptions(itemCatalog), itemEditor);
+            if (itemAllowEmpty) {
+              const noneOpt = document.createElement('option');
+              noneOpt.value = '';
+              noneOpt.textContent = '(None)';
+              itemSelect.appendChild(noneOpt);
+            }
+            itemOptions.forEach((symbolId) => {
+              const opt = document.createElement('option');
+              opt.value = symbolId;
+              opt.textContent = symbolId;
+              itemSelect.appendChild(opt);
+            });
+            itemSelect.value = slotState.item ?? '';
+            itemSelect.addEventListener('change', async () => {
+              await applyNonNumericEdit(section, `${key}.item`, itemSelect.value);
+            });
+            controlsRow.appendChild(itemSelect);
+
+            const levelMap = slotMap.level || {};
+            const levelEditor = { ...levelDefaults, ...slotFieldEditor, ...(levelMap.editor || {}) };
+            const levelBounds = resolveNumericBounds(section, `${key}.level`, levelEditor);
+            const levelInput = document.createElement('input');
+            levelInput.id = `edit-${section}-${key}-level`;
+            levelInput.name = `${key}.level`;
+            levelInput.type = 'number';
+            levelInput.step = '1';
+            levelInput.placeholder = 'Level';
+            if (levelBounds.min !== null) levelInput.min = String(levelBounds.min);
+            if (levelBounds.max !== null) levelInput.max = String(levelBounds.max);
+            levelInput.value = slotState.level ?? '';
+            levelInput.addEventListener('change', () => {
+              handleNumericEdit(section, `${key}.level`, levelInput.value, levelInput, levelEditor);
+            });
+            controlsRow.appendChild(levelInput);
+
+            wrapper.appendChild(controlsRow);
+            editFieldsEl.appendChild(wrapper);
+          }
+
+          continue;
         }
 
         for (const key of sectionMap.keys) {
@@ -743,10 +861,12 @@
 
     const decorateInteractivePanels = (svgEl) => {
       const characterPanel = svgEl.querySelector('#panel-character');
+      const abilitiesPanel = svgEl.querySelector('#panel-abilities');
       const consumablesPanel = svgEl.querySelector('#panel-consumables');
       const skillsPanel = svgEl.querySelector('#panel-skills');
       const housingPanel = svgEl.querySelector('#panel-housing');
       if (characterPanel) characterPanel.style.cursor = 'pointer';
+      if (abilitiesPanel) abilitiesPanel.style.cursor = 'pointer';
       if (consumablesPanel) consumablesPanel.style.cursor = 'pointer';
       if (skillsPanel) skillsPanel.style.cursor = 'pointer';
       if (housingPanel) housingPanel.style.cursor = 'pointer';
@@ -776,6 +896,10 @@
       }
       if (target.closest('#panel-skills')) {
         openEditor('skills');
+        return;
+      }
+      if (target.closest('#panel-abilities')) {
+        openEditor('abilities');
         return;
       }
       if (target.closest('#panel-consumables')) {

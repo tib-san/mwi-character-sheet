@@ -345,6 +345,30 @@
       "abilities": {
         "delimiter": ",",
         "keys": ["1","2","3","4","5","6","7","8"],
+        "editor": {
+          "item": { "type": "symbol", "catalog": "./assets/sprites/abilities_sprite.svg", "allowEmpty": true },
+          "level": { "type": "number", "min": 1, "max": 200 },
+          "fields": {
+            "1": { "rulesRef": "abilities.normal" },
+            "2": { "rulesRef": "abilities.normal" },
+            "3": { "rulesRef": "abilities.normal" },
+            "4": { "rulesRef": "abilities.normal" },
+            "5": { "rulesRef": "abilities.special" },
+            "6": { "rulesRef": "abilities.special" },
+            "7": { "rulesRef": "abilities.special" },
+            "8": { "rulesRef": "abilities.special" }
+          },
+          "labels": {
+            "1": "Ability 1",
+            "2": "Ability 2",
+            "3": "Ability 3",
+            "4": "Ability 4",
+            "5": "Ability 5",
+            "6": "Ability 6",
+            "7": "Ability 7",
+            "8": "Ability 8"
+          }
+        },
         "1":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
         "2":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
         "3":  { "delimiter": ".", "keys": ["item","level"], "item": { "prefix": "./assets/sprites/abilities_sprite.svg#", "default": "" }, "level": { "default": "" } },
@@ -535,7 +559,7 @@
   </g>
 
   <!-- ===== Abilities ===== -->
-  <g transform="translate(380,200)">
+  <g transform="translate(380,200)" id="panel-abilities">
     <rect class="panel" x="0" y="0" width="350" height="190" />
     <text class="title" x="3" y="14">Abilities</text>
 
