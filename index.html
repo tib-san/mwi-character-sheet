@@ -829,7 +829,7 @@
       if (section === 'skills' && key !== 'combat') {
         applyComputedCombat(currentParsed);
       }
-      await renderSheet();
+      await renderSheet({ refreshEditor: false });
       updateUrlFromState();
     };
 
@@ -1159,7 +1159,7 @@
       if (housingPanel) housingPanel.style.cursor = cursor;
     };
 
-    const renderSheet = async () => {
+    const renderSheet = async ({ refreshEditor = true } = {}) => {
       if (!currentSvgText || !currentRenderMap || !currentParsed) return;
       const replacements = flatten(currentParsed, currentRenderMap.split, currentRenderMap.joinBy || '-', '');
       const templated = applyReplacements(currentSvgText, replacements);
@@ -1169,7 +1169,7 @@
         await inlineExternalAssets(svgEl);
         decorateInteractivePanels(svgEl);
       }
-      if (currentEditSection) {
+      if (refreshEditor && currentEditSection) {
         await renderEditorFields(currentEditSection);
       }
     };
