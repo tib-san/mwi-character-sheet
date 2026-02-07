@@ -4,8 +4,81 @@
   <meta charset="UTF-8" />
   <title>MWI Character Sheet Render</title>
   <style>
-    body { margin: 0; background: #0b1020; color: #e7e7e7; font-family: system-ui, sans-serif; }
-    #target { width: 870px; height: 610px; display: block; margin: 20px auto; }
+    body {
+      margin: 0;
+      background: #0b1020;
+      color: #e7e7e7;
+      font-family: system-ui, sans-serif;
+    }
+
+    #workspace {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px auto 0;
+      width: fit-content;
+      max-width: calc(100vw - 24px);
+    }
+
+    #target {
+      width: 870px;
+      height: 610px;
+      display: block;
+    }
+
+    #edit-panel {
+      width: 300px;
+      min-height: 610px;
+      box-sizing: border-box;
+      border: 1px solid #3a4a70;
+      border-radius: 8px;
+      background: #141d37;
+      padding: 12px;
+      overflow: auto;
+    }
+
+    #edit-panel[hidden] {
+      display: none;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      color: #c7b5e3;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: #c7b5e3;
+      text-transform: capitalize;
+    }
+
+    .field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #3a4a70;
+      background: #0f1630;
+      color: #e7e7e7;
+      font-size: 14px;
+    }
+
     .copy-btn {
       display: inline-flex;
       justify-content: center;
@@ -18,21 +91,76 @@
       cursor: pointer;
       font-size: 14px;
     }
-    #button-row{ display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 20px; margin: 20px auto 0; }
-    #copy-img-btn:disabled { opacity: 0.6; cursor: progress; }
+
+    #button-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin: 20px auto 0;
+    }
+
+    #copy-img-btn:disabled,
+    #copy-lnk-btn:disabled {
+      opacity: 0.6;
+      cursor: progress;
+    }
+
+    @media (max-width: 1220px) {
+      #workspace {
+        flex-direction: column;
+        width: calc(100vw - 24px);
+      }
+
+      #target {
+        width: 100%;
+        height: auto;
+      }
+
+      #target svg {
+        width: 100%;
+        height: auto;
+      }
+
+      #edit-panel {
+        width: 100%;
+        min-height: 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="target">Loading…</div>
+  <div id="workspace">
+    <div id="target">Loading…</div>
+    <aside id="edit-panel" hidden>
+      <div class="panel-header">
+        <h2 id="edit-title" class="panel-title">Edit</h2>
+        <button id="edit-close-btn" class="copy-btn" type="button">Close</button>
+      </div>
+      <div id="edit-fields"></div>
+    </aside>
+  </div>
+
   <div id="button-row">
     <button id="copy-img-btn" class="copy-btn" type="button">Copy image</button>
     <button id="copy-lnk-btn" class="copy-btn" type="button">Copy link</button>
   </div>
+
   <script type="module">
     const svgUrl = './assets/images/loadout_combat.svg';
     const symbolFileCache = new Map();
     const imageDataCache = new Map();
+
+    const targetEl = document.getElementById('target');
+    const editPanelEl = document.getElementById('edit-panel');
+    const editFieldsEl = document.getElementById('edit-fields');
+    const editTitleEl = document.getElementById('edit-title');
+
     let currentParsed = null;
+    let currentRenderMap = null;
+    let currentSvgText = '';
+    let currentEditSection = null;
 
     const fetchSvg = async () => {
       const res = await fetch(svgUrl);
@@ -43,14 +171,20 @@
     const readRenderMap = (svgText) => {
       const match = svgText.match(/render-map:\s*([\s\S]*?)-->/);
       if (!match) return null;
-      try { return JSON.parse(match[1]); } catch (e) { return null; }
+      try {
+        return JSON.parse(match[1]);
+      } catch (e) {
+        return null;
+      }
     };
 
     const splitWithKeys = (str, delimiter, keys) => {
       if (!keys || !Array.isArray(keys)) return {};
       const parts = delimiter !== null && delimiter !== undefined ? (str ? str.split(delimiter) : []) : [str];
       const out = {};
-      keys.forEach((k, idx) => { out[k] = parts[idx] !== undefined ? parts[idx] : ''; });
+      keys.forEach((k, idx) => {
+        out[k] = parts[idx] !== undefined ? parts[idx] : '';
+      });
       return out;
     };
 
@@ -64,6 +198,19 @@
         result[k] = childMap ? parseByMap(val, childMap) : val;
       });
       return result;
+    };
+
+    const serializeByMap = (obj, mapNode) => {
+      if (!mapNode || !mapNode.keys) {
+        return obj === undefined || obj === null ? '' : String(obj);
+      }
+      const parts = mapNode.keys.map((k) => {
+        const childMap = mapNode[k];
+        const childVal = obj && typeof obj === 'object' ? obj[k] : '';
+        return childMap ? serializeByMap(childVal, childMap) : (childVal === undefined || childVal === null ? '' : String(childVal));
+      });
+      const delimiter = mapNode.delimiter !== undefined && mapNode.delimiter !== null ? mapNode.delimiter : '';
+      return parts.join(delimiter);
     };
 
     const flatten = (obj, mapNode, joinBy, prefixKey = '', inherited = {}, out = {}) => {
@@ -119,7 +266,7 @@
       const rect = svgEl.getBoundingClientRect();
       if (rect.width && rect.height) return { width: rect.width, height: rect.height };
 
-      return { width: 870, height: 610 }; // sensible fallback matching layout
+      return { width: 870, height: 610 };
     };
 
     const svgToPngBlob = async (svgEl) => new Promise((resolve, reject) => {
@@ -172,9 +319,9 @@
       btn.disabled = true;
       btn.textContent = 'Copying…';
       try {
-        const blobPromise = svgToPngBlob(svgEl); // start immediately to retain activation
+        const blobPromise = svgToPngBlob(svgEl);
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blobPromise })]);
-        await blobPromise; // ensure completion before success message
+        await blobPromise;
         btn.textContent = 'Copied!';
       } catch (err) {
         console.error(err);
@@ -197,7 +344,7 @@
 
       const name = currentParsed?.general?.name || 'Player';
       const combat = currentParsed?.skills?.combat || '';
-      const label = `Combat Sheet for ${name}` + ( combat ? ` (CL ${combat})` : "" );
+      const label = `Combat Sheet for ${name}` + (combat ? ` (CL ${combat})` : '');
       const url = location.href;
 
       const html = `<a href="${url}">${label}</a>`;
@@ -224,28 +371,213 @@
       }
     };
 
+    const updateUrlFromState = () => {
+      if (!currentParsed || !currentRenderMap || !currentRenderMap.split) return;
+      const urpt = serializeByMap(currentParsed, currentRenderMap.split);
+      const current = location.search.startsWith('?') ? location.search.slice(1) : '';
+      const kept = current
+        .split('&')
+        .filter((part) => part && !part.startsWith('urpt='));
+      if (urpt) kept.unshift(`urpt=${urpt}`);
+      const query = kept.length ? `?${kept.join('&')}` : '';
+      const nextUrl = `${location.pathname}${query}${location.hash}`;
+      history.replaceState(null, '', nextUrl);
+    };
+
+    const getRawQueryParam = (name) => {
+      const raw = location.search.startsWith('?') ? location.search.slice(1) : '';
+      if (!raw) return '';
+      const parts = raw.split('&');
+      const prefix = `${name}=`;
+      const match = parts.find((part) => part.startsWith(prefix));
+      return match ? match.slice(prefix.length) : '';
+    };
+
+    const getFieldBounds = (section, key) => {
+      const sectionMap = currentRenderMap?.split?.[section] || {};
+      const editor = sectionMap.editor || {};
+      const fieldEditor = (editor.fields && editor.fields[key]) || {};
+
+      const sectionMin = Number.isFinite(Number(editor.min)) ? Number(editor.min) : null;
+      const sectionMax = Number.isFinite(Number(editor.max)) ? Number(editor.max) : null;
+      const fieldMin = Number.isFinite(Number(fieldEditor.min)) ? Number(fieldEditor.min) : null;
+      const fieldMax = Number.isFinite(Number(fieldEditor.max)) ? Number(fieldEditor.max) : null;
+
+      return {
+        min: fieldMin !== null ? fieldMin : sectionMin,
+        max: fieldMax !== null ? fieldMax : sectionMax,
+      };
+    };
+
+    const normalizeNumericValue = (rawValue, min, max) => {
+      const txt = String(rawValue ?? '').trim();
+      if (txt === '') return '';
+      const parsed = Number.parseInt(txt, 10);
+      if (!Number.isFinite(parsed)) return '';
+      let value = parsed;
+      if (min !== null) value = Math.max(min, value);
+      if (max !== null) value = Math.min(max, value);
+      return String(value);
+    };
+
+    const updateRenderedSectionValues = (section) => {
+      const svgEl = document.querySelector('#target svg');
+      if (!svgEl || !currentRenderMap?.split?.[section]) return;
+
+      const sectionMap = currentRenderMap.split[section];
+      const sectionState = currentParsed?.[section] || {};
+
+      if (section === 'skills') {
+        sectionMap.keys.forEach((key, idx) => {
+          const node = svgEl.querySelector(`#skill-level-${idx + 1}`);
+          if (node) node.textContent = sectionState[key] ?? '';
+        });
+      }
+
+      if (section === 'housing') {
+        sectionMap.keys.forEach((key) => {
+          const node = svgEl.querySelector(`#housing-level-${key}`);
+          if (node) node.textContent = sectionState[key] ?? '';
+        });
+      }
+    };
+
+    const handleNumericEdit = (section, key, rawValue, inputEl) => {
+      if (!currentParsed) return;
+      if (section === 'skills' && key === 'combat') return;
+      if (!currentParsed[section] || typeof currentParsed[section] !== 'object') {
+        currentParsed[section] = {};
+      }
+
+      const bounds = getFieldBounds(section, key);
+      const normalized = normalizeNumericValue(rawValue, bounds.min, bounds.max);
+      currentParsed[section][key] = normalized;
+
+      if (section === 'skills' && key !== 'combat') {
+        applyComputedCombat(currentParsed);
+      }
+
+      if (inputEl) {
+        inputEl.value = currentParsed[section][key] ?? '';
+      }
+
+      updateRenderedSectionValues(section);
+      if (section === 'skills' && key !== 'combat' && currentEditSection === 'skills') {
+        const combatInput = editFieldsEl.querySelector('input[name="combat"]');
+        if (combatInput) combatInput.value = currentParsed.skills?.combat ?? '';
+      }
+      updateUrlFromState();
+    };
+
+    const renderEditorFields = (section) => {
+      if (!currentRenderMap?.split?.[section] || !currentParsed) return;
+      const sectionMap = currentRenderMap.split[section];
+      const sectionLabel = section === 'skills' ? 'Skills' : 'Housing';
+
+      editTitleEl.textContent = `Edit ${sectionLabel}`;
+      editFieldsEl.innerHTML = '';
+
+      const state = currentParsed[section] || {};
+      const hiddenKeys = new Set(Array.isArray(sectionMap?.editor?.hiddenKeys) ? sectionMap.editor.hiddenKeys : []);
+      sectionMap.keys.forEach((key) => {
+        const fieldEditor = sectionMap?.editor?.fields?.[key] || {};
+        if (hiddenKeys.has(key) || fieldEditor.hidden === true) return;
+
+        const bounds = getFieldBounds(section, key);
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'field';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `edit-${section}-${key}`);
+        label.textContent = key.replaceAll('_', ' ');
+
+        const input = document.createElement('input');
+        input.id = `edit-${section}-${key}`;
+        input.name = key;
+        input.type = 'number';
+        input.step = '1';
+        if (bounds.min !== null) input.min = String(bounds.min);
+        if (bounds.max !== null) input.max = String(bounds.max);
+        input.value = state[key] ?? '';
+
+        input.addEventListener('change', () => {
+          handleNumericEdit(section, key, input.value, input);
+        });
+
+        wrapper.append(label, input);
+        editFieldsEl.appendChild(wrapper);
+      });
+    };
+
+    const openEditor = (section) => {
+      if (section !== 'skills' && section !== 'housing') return;
+      currentEditSection = section;
+      renderEditorFields(section);
+      editPanelEl.hidden = false;
+    };
+
+    const closeEditor = () => {
+      editPanelEl.hidden = true;
+    };
+
+    const decorateInteractivePanels = (svgEl) => {
+      const skillsPanel = svgEl.querySelector('#panel-skills');
+      const housingPanel = svgEl.querySelector('#panel-housing');
+      if (skillsPanel) skillsPanel.style.cursor = 'pointer';
+      if (housingPanel) housingPanel.style.cursor = 'pointer';
+    };
+
+    const renderSheet = async () => {
+      if (!currentSvgText || !currentRenderMap || !currentParsed) return;
+      const replacements = flatten(currentParsed, currentRenderMap.split, currentRenderMap.joinBy || '-', '');
+      const templated = applyReplacements(currentSvgText, replacements);
+      targetEl.innerHTML = templated;
+      const svgEl = document.querySelector('#target svg');
+      if (svgEl) {
+        await inlineExternalAssets(svgEl);
+        decorateInteractivePanels(svgEl);
+      }
+      if (currentEditSection) {
+        renderEditorFields(currentEditSection);
+      }
+    };
+
+    const onSheetClick = (evt) => {
+      const target = evt.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('#panel-skills')) {
+        openEditor('skills');
+        return;
+      }
+      if (target.closest('#panel-housing')) {
+        openEditor('housing');
+      }
+    };
+
     const main = async () => {
       try {
-        const urlParams = new URLSearchParams(location.search);
-        const urpt = urlParams.get('urpt') || '';
-        const svgText = await fetchSvg();
-        const renderMap = readRenderMap(svgText);
-        const parsed = (urpt && renderMap && renderMap.split) ? (parseByMap(urpt, renderMap.split) || {}) : {};
-        applyComputedCombat(parsed);
-        currentParsed = parsed;
-        const replacements = flatten(parsed, renderMap ? renderMap.split : null, renderMap ? renderMap.joinBy || '-' : '-', '');
-        const templated = applyReplacements(svgText, replacements);
-        document.getElementById('target').innerHTML = templated;
-        const svgEl = document.querySelector('#target svg');
-        if (svgEl) await inlineExternalAssets(svgEl); // prime caches so copying is instant
+        const urpt = getRawQueryParam('urpt');
+
+        currentSvgText = await fetchSvg();
+        currentRenderMap = readRenderMap(currentSvgText);
+        if (!currentRenderMap || !currentRenderMap.split) {
+          throw new Error('Missing or invalid render-map');
+        }
+
+        currentParsed = parseByMap(urpt, currentRenderMap.split) || {};
+        applyComputedCombat(currentParsed);
+        await renderSheet();
       } catch (err) {
-        document.getElementById('target').textContent = 'Render error: ' + err.message;
+        targetEl.textContent = 'Render error: ' + err.message;
         console.error(err);
       }
     };
 
     document.getElementById('copy-img-btn').addEventListener('click', copyImage);
     document.getElementById('copy-lnk-btn').addEventListener('click', copyLink);
+    document.getElementById('edit-close-btn').addEventListener('click', closeEditor);
+    targetEl.addEventListener('click', onSheetClick);
     main();
 
     async function inlineExternalAssets(svgEl) {
@@ -272,7 +604,6 @@
       const defs = svgEl.querySelector('defs') || svgEl.insertBefore(document.createElementNS('http://www.w3.org/2000/svg', 'defs'), svgEl.firstChild);
       const files = [...new Set(refs.map((r) => r.file))];
 
-      // Fetch symbol files in parallel with caching
       await Promise.all(files.map(async (file) => {
         if (symbolFileCache.has(file)) return;
         const res = await fetch(file);
@@ -286,7 +617,7 @@
         if (text) parsedByFile.set(file, new DOMParser().parseFromString(text, 'image/svg+xml'));
       });
 
-      const idMap = new Map(); // key: file#symbolId -> newId
+      const idMap = new Map();
       refs.forEach(({ file, symbolId, el }) => {
         const doc = parsedByFile.get(file);
         if (!doc) return;
@@ -323,7 +654,9 @@
         reader.readAsDataURL(blob);
       });
 
-      const hrefs = [...new Set(images.map((img) => img.getAttribute('href') || img.getAttribute('xlink:href')).filter((h) => h && !h.startsWith('#') && !h.startsWith('data:')))];
+      const hrefs = [...new Set(images
+        .map((img) => img.getAttribute('href') || img.getAttribute('xlink:href'))
+        .filter((h) => h && !h.startsWith('#') && !h.startsWith('data:')))];
 
       await Promise.all(hrefs.map(async (href) => {
         if (imageDataCache.has(href)) return;
@@ -347,11 +680,13 @@
     function applyComputedCombat(parsed) {
       if (!parsed || !parsed.skills) return;
       const s = parsed.skills;
-      if (s.combat && String(s.combat).trim() !== '') return;
 
       const fields = ['stamina', 'intelligence', 'attack', 'defense', 'melee', 'ranged', 'magic'];
       const hasOthers = fields.some((k) => (s[k] ?? '').toString().trim() !== '');
-      if (!hasOthers) return;
+      if (!hasOthers) {
+        s.combat = '';
+        return;
+      }
 
       const num = (val) => {
         const n = parseFloat(val);

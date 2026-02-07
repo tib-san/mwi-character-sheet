@@ -320,7 +320,8 @@
       "skills": {
         "delimiter": ",",
         "keys": ["combat","stamina","intelligence","attack","defense","melee","ranged","magic"],
-        "default": ""
+        "default": "",
+        "editor": { "min": 1, "max": 200, "formula": "combat = round(0.1*(stamina+intelligence+attack+defense+max(melee,ranged,magic)) + 0.5*max(attack,defense,melee,ranged,magic))", "hiddenKeys": ["combat"] }
       },
       "equipment": {
         "delimiter": ",",
@@ -362,7 +363,8 @@
       "housing": {
         "delimiter": ",",
         "keys": ["dining_room","library","dojo","armory","gym","archery_range","mystical_study"],
-        "default": ""
+        "default": "",
+        "editor": { "min": 0, "max": 8 }
       },
       "achievements": {
         "delimiter": "",
@@ -547,7 +549,7 @@
   </g>
 
   <!-- ===== Skills ===== -->
-  <g transform="translate(380,400)">
+  <g transform="translate(380,400)" id="panel-skills">
     <rect class="panel" x="0" y="0" width="350" height="190" />
     <text class="title" x="3" y="14">Skills</text>
 
@@ -589,7 +591,7 @@
   </g>
 
   <!-- ===== Housing ===== -->
-  <g transform="translate(740,0)">
+  <g transform="translate(740,0)" id="panel-housing">
     <rect class="panel" x="0" y="0" width="110" height="590" />
     <text class="title" x="3" y="14">Housing</text>
 
