@@ -700,6 +700,9 @@
       <text class="skillLevel" id="housing-level-mystical_study" x="65" y="494">{{housing-mystical_study}}</text>
     </g>
   </g>
+
+  <!-- Shameless plug, sorry, but people actually requested this o.O -->
+  <text y="585" class="title" style="opacity: 0.2;font-size: 6pt;" x="5">Character Cards by Tib (/profile KekWing)</text>
 </g>
 
 </svg>
