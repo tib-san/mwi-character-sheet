@@ -472,9 +472,8 @@
         </g>
       </g>
 
-      <g transform="translate(0,200)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
-        <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
-          <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
+      <g transform="translate(0,200)" id="character-name" class="nameRow">
+        <g id="character-name-inner" class="nameRow-inner">
           <text class="title nameRow-name enchant" text x="18" y="0" dominant-baseline="middle">{{general-score}}</text>
         </g>
       </g>
