@@ -322,6 +322,7 @@
     let currentWhatsNew = null;
     let currentSvgText = '';
     let currentEditSection = null;
+    let editorGeneration = 0;
     let isEditMode = false;
     const itemMetaCache = new Map();
 
@@ -994,6 +995,8 @@
       const sections = EDITOR_PANELS[panelKey];
       if (!sections || !sections.length) return;
 
+      const generation = ++editorGeneration;
+
       const panelLabelMap = {
         character: 'Character',
         equipment: 'Equipment',
@@ -1048,6 +1051,7 @@
             const itemCatalog = itemEditor.catalog || ((itemMap.prefix || '').split('#')[0] || '');
             const itemAllowEmpty = itemEditor.allowEmpty !== false;
             const itemOptions = resolveSymbolOptions(section, key, await getSymbolOptions(itemCatalog), itemEditor);
+            if (generation !== editorGeneration) return;
             if (itemAllowEmpty) {
               const noneOpt = document.createElement('option');
               noneOpt.value = '';
@@ -1118,6 +1122,7 @@
             const itemCatalog = itemEditor.catalog || ((itemMap.prefix || '').split('#')[0] || '');
             const itemAllowEmpty = itemEditor.allowEmpty !== false;
             const itemOptions = resolveSymbolOptions(section, key, await getSymbolOptions(itemCatalog), itemEditor);
+            if (generation !== editorGeneration) return;
             if (itemAllowEmpty) {
               const noneOpt = document.createElement('option');
               noneOpt.value = '';
@@ -1235,6 +1240,7 @@
             const catalog = fieldEditor.catalog || sectionEditor.catalog || ((fieldMap.prefix || sectionMap.prefix || '').split('#')[0] || '');
             const allowEmpty = fieldEditor.allowEmpty !== undefined ? fieldEditor.allowEmpty : (sectionEditor.allowEmpty !== false);
             const options = resolveSymbolOptions(section, key, await getSymbolOptions(catalog), fieldEditor);
+            if (generation !== editorGeneration) return;
             if (allowEmpty) {
               const noneOpt = document.createElement('option');
               noneOpt.value = '';
