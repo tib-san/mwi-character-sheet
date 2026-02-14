@@ -1,6 +1,10 @@
 {
   "entries": [
     {
+      "date": "2026-02-14",
+      "summary": "Adds combat score. Fixes background not showing and duplicated editor fields."
+    },
+    {
       "date": "2026-02-07",
       "summary": "Big editor update: you can now edit your character sheet directly in the app, with smarter item choices, cleaner organization, and smoother interactions."
     },
