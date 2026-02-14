@@ -419,6 +419,26 @@
       return parts.join(delimiter);
     };
 
+    const applyFormat = (val, mapNode) => {
+      const fmt = mapNode?.format;
+      if (!fmt || val === '' || val === null || val === undefined) return val;
+      const str = String(val);
+      const num = parseInt(str, 10);
+      if (!Number.isFinite(num)) return val;
+
+      const commaIdx = fmt.lastIndexOf(',');
+      if (commaIdx === -1) return str;
+
+      const groupSize = fmt.length - commaIdx - 1;
+      const sep = mapNode.groupSeparator ?? ',';
+      const abs = Math.abs(num).toString();
+      const grouped = abs.replace(
+        new RegExp(`\\B(?=(\\d{${groupSize}})+(?!\\d))`, 'g'),
+        sep,
+      );
+      return num < 0 ? `-${grouped}` : grouped;
+    };
+
     const flatten = (obj, mapNode, joinBy, prefixKey = '', inherited = {}, out = {}) => {
       if (obj === null || obj === undefined) return out;
       if (!mapNode) return out;
@@ -427,7 +447,8 @@
 
       if (!mapNode.keys || typeof obj !== 'object') {
         const val = (obj === '' || obj === undefined || obj === null) ? (currentDefault !== undefined ? currentDefault : '') : obj;
-        const finalVal = currentPrefix && val ? `${currentPrefix}${val}` : val;
+        const formatted = applyFormat(val, mapNode);
+        const finalVal = currentPrefix && formatted ? `${currentPrefix}${formatted}` : formatted;
         if (prefixKey) out[prefixKey] = finalVal;
         return out;
       }
@@ -440,7 +461,8 @@
           flatten(childVal, childMap, joinBy, nextKey, { prefix: childMap.prefix ?? currentPrefix, default: childMap.default ?? currentDefault }, out);
         } else {
           const val = (childVal === '' || childVal === undefined || childVal === null) ? (childMap.default !== undefined ? childMap.default : currentDefault !== undefined ? currentDefault : '') : childVal;
-          const finalVal = (childMap.prefix !== undefined ? childMap.prefix : currentPrefix) && val ? `${childMap.prefix !== undefined ? childMap.prefix : currentPrefix}${val}` : val;
+          const formatted = applyFormat(val, childMap);
+          const finalVal = (childMap.prefix !== undefined ? childMap.prefix : currentPrefix) && formatted ? `${childMap.prefix !== undefined ? childMap.prefix : currentPrefix}${formatted}` : formatted;
           out[nextKey] = finalVal;
         }
       });

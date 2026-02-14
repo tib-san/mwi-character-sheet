@@ -316,7 +316,7 @@
         "outfit": { "prefix": "./assets/sprites/avatar_outfits_sprite.svg#", "default": "tshirt_default", "editor": { "type": "symbol", "catalog": "./assets/sprites/avatar_outfits_sprite.svg", "allowEmpty": false } },
         "name_icon": { "prefix": "./assets/sprites/chat_icons_sprite.svg#", "default": "", "editor": { "type": "symbol", "catalog": "./assets/sprites/chat_icons_sprite.svg", "allowEmpty": true } },
         "name_color": { "default": "", "editor": { "type": "enum", "optionsRef": "general.name_color" } },
-        "score": { "prefix": "Score: ", "editor": { "type": "number", "min": 0, "emptyWhenZero": true } }
+        "score": { "prefix": "Score: ", "format": "#,##0", "groupSeparator": "\u2009", "editor": { "type": "number", "min": 0, "emptyWhenZero": true } }
       },
       "skills": {
         "delimiter": ",",
