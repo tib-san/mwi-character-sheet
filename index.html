@@ -947,7 +947,7 @@
       return ids;
     };
 
-    const handleNumericEdit = (section, key, rawValue, inputEl, fieldEditor = {}) => {
+    const handleNumericEdit = async (section, key, rawValue, inputEl, fieldEditor = {}) => {
       if (!currentParsed) return;
       if (section === 'skills' && key === 'combat') return;
 
@@ -966,7 +966,12 @@
         inputEl.value = getSectionValue(section, key) ?? '';
       }
 
-      updateRenderedSectionValues(section);
+      const handledByTargetedUpdate = ['skills', 'housing', 'equipment', 'abilities'];
+      if (handledByTargetedUpdate.includes(section)) {
+        updateRenderedSectionValues(section);
+      } else {
+        await renderSheet({ refreshEditor: false });
+      }
       if (section === 'skills' && key !== 'combat' && currentEditSection === 'skills') {
         const combatInput = editFieldsEl.querySelector('input[name="combat"]');
         if (combatInput) combatInput.value = currentParsed.skills?.combat ?? '';
@@ -1186,8 +1191,8 @@
             if (bounds.min !== null) input.min = String(bounds.min);
             if (bounds.max !== null) input.max = String(bounds.max);
             input.value = normalizeEditorNumericValue(state[key], numericEditor);
-            input.addEventListener('change', () => {
-              handleNumericEdit(section, key, input.value, input, numericEditor);
+            input.addEventListener('change', async () => {
+              await handleNumericEdit(section, key, input.value, input, numericEditor);
             });
             wrapper.appendChild(input);
           } else if (controlType === 'text') {

@@ -310,12 +310,13 @@
       "keys": ["general","skills","equipment","abilities","consumables","housing","achievements"],
       "general": {
         "delimiter": ",",
-        "keys": ["name","avatar","outfit","name_icon","name_color"],
+        "keys": ["name","avatar","outfit","name_icon","name_color","score"],
         "name": { "default": "Player", "editor": { "type": "text", "maxLength": 24 } },
         "avatar": { "prefix": "./assets/sprites/avatars_sprite.svg#", "default": "person_default", "editor": { "type": "symbol", "catalog": "./assets/sprites/avatars_sprite.svg", "allowEmpty": false } },
         "outfit": { "prefix": "./assets/sprites/avatar_outfits_sprite.svg#", "default": "tshirt_default", "editor": { "type": "symbol", "catalog": "./assets/sprites/avatar_outfits_sprite.svg", "allowEmpty": false } },
         "name_icon": { "prefix": "./assets/sprites/chat_icons_sprite.svg#", "default": "", "editor": { "type": "symbol", "catalog": "./assets/sprites/chat_icons_sprite.svg", "allowEmpty": true } },
-        "name_color": { "default": "", "editor": { "type": "enum", "optionsRef": "general.name_color" } }
+        "name_color": { "default": "", "editor": { "type": "enum", "optionsRef": "general.name_color" } },
+        "score": { "prefix": "Score: ", "editor": { "type": "number", "min": 0, "emptyWhenZero": true } }
       },
       "skills": {
         "delimiter": ",",
@@ -464,14 +465,21 @@
     <text class="title" x="3" y="14">Character</text>
 
     <g id="character-overview" transform="translate(185,0)">
-      <g transform="translate(0,40)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
+      <g transform="translate(0,20)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
         <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
           <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
           <text class="title nameRow-name color_{{general-name_color}} color_name_{{general-name}}" text x="18" y="0" dominant-baseline="middle">{{general-name}}</text>
         </g>
       </g>
 
-      <g id="character-avatar" transform="translate(-160,30)">
+      <g transform="translate(0,200)" id="character-name" class="nameRow" data-name-icon="{{general-name_icon}}">
+        <g id="character-name-inner" class="nameRow-inner" data-name-icon="{{general-name_icon}}">
+          <use class="nameRow-icon" href="{{general-name_icon}}" x="" y="-9" width="16" height="16" />
+          <text class="title nameRow-name enchant" text x="18" y="0" dominant-baseline="middle">{{general-score}}</text>
+        </g>
+      </g>
+
+      <g id="character-avatar" transform="translate(-160,15)">
         <g transform="translate(85,15) scale(0.75)">
           <svg width="200" height="200" viewBox="0 0 200 200">
             <use id="avatar-base" href="{{general-avatar}}" width="200" height="200" />
